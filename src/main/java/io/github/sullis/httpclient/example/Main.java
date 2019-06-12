@@ -11,6 +11,8 @@ public class Main {
     try {
       CommandLine cmdLine = CommandLineUtil.build(args);
       System.out.println("args: " + cmdLine.getArgList());
+      TaskProcessor p = new TaskProcessor(HttpClientUtil.build(), true, 20);
+      p.execute();
     } catch (ParseException ex) {
       System.err.println("Command line error:  " + ex.getMessage());
       System.exit(1);
