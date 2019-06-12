@@ -4,6 +4,8 @@ import java.net.http.HttpClient;
 import java.time.Duration;
 
 public class HttpClientUtil {
+    static public final String USER_AGENT = HttpClientUtil.class.getName();
+
     private HttpClientUtil() { /* empty */ }
 
     static public HttpClient build() {
