@@ -10,27 +10,51 @@ import org.apache.commons.csv.CSVParser;
 
 public class FileParser {
 
-    public ImmutableList<URL> parse(java.io.File file) throws IOException {
+    public FileParseResult parse(java.io.File file) throws IOException {
         if (!file.exists()) {
             throw new FileParseException("file does not exist");
         }
         FileReader reader = new FileReader(file);
         CSVParser parser = CSVFormat.DEFAULT.parse(reader);
-        ImmutableList.Builder builder = ImmutableList.builder();
+        ImmutableList.Builder urlListBuilder = ImmutableList.builder();
+        ImmutableList.Builder problemListBuilder = ImmutableList.builder();
         parser.iterator().forEachRemaining(record -> {
             final long lineNum = parser.getCurrentLineNumber();
             System.out.println(lineNum);
             if (lineNum > 1) {
                 String website = record.get(1);
                 try {
-                    builder.add(new URL("https://" + website));
+                    urlListBuilder.add(new URL("https://" + website));
                 }
                 catch (MalformedURLException ex) {
-                    throw new FileParseException("line:" + lineNum, ex);
+                    problemListBuilder.add(new LineParseProblem(lineNum, ex.getMessage()));
                 }
             }
         });
-        return builder.build();
+        return new FileParseResult(urlListBuilder.build(), problemListBuilder.build());
+    }
+
+    static class LineParseProblem {
+      private final long _lineNumber;
+      private final String _description;
+
+      public LineParseProblem(long lineNumber, String description) {
+        _lineNumber = lineNumber;
+        _description = description;
+      }
+    }
+
+    static class FileParseResult {
+        private ImmutableList<URL> _urls;
+        private ImmutableList<LineParseProblem> _problems;
+
+        public FileParseResult(ImmutableList<URL> urls, ImmutableList<LineParseProblem> problems) {
+            this._urls = urls;
+            this._problems = problems;
+        }
+
+        public ImmutableList<LineParseProblem> getProblems() { return _problems; }
+        public ImmutableList<URL> getUrls() { return _urls; }
     }
 
     static class FileParseException extends RuntimeException {
