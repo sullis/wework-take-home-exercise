@@ -18,6 +18,7 @@
 
   <properties>
     <junit.version>5.4.2</junit.version>
+    <autovalue.version>1.6.2</autovalue.version>
     <skip.tests>false</skip.tests>
   </properties>
 
@@ -38,10 +39,21 @@
       <version>1.6</version>
     </dependency>
     <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-api</artifactId>
-        <version>${junit.version}</version>
-        <scope>test</scope>
+      <groupId>com.google.auto.value</groupId>
+      <artifactId>auto-value-annotations</artifactId>
+      <version>${autovalue.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.auto.value</groupId>
+      <artifactId>auto-value</artifactId>
+      <version>${autovalue.version}</version>
+      <scope>provided</scope>
+      </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
         <groupId>org.junit.jupiter</groupId>
@@ -83,6 +95,25 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>build-helper-maven-plugin</artifactId>
+      <version>3.0.0</version>
+      <executions>
+        <execution>
+          <id>add-generated-sources</id>
+          <phase>generate-sources</phase>
+          <goals>
+            <goal>add-source</goal>
+          </goals>
+          <configuration>
+            <sources>
+              <source>${basedir}/target/generated-sources/annotations</source>
+            </sources>
+          </configuration>
+        </execution>
+      </executions>
       </plugin>
 
       <plugin>
