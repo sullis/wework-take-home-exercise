@@ -8,6 +8,7 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.net.http.HttpClient;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 public class TaskProcessorTest {
     @Test
@@ -22,7 +23,9 @@ public class TaskProcessorTest {
                 Optional.of(listener),
                 urls.stream(),
                 20);
-        processor.execute();
+        CompletableFuture<TaskProcessorResult> future = processor.execute();
+        TaskProcessorResult result = future.get();
+        assertNotNull(result);
         assertEquals("Processing URL: https://google.com\nProcessing URL: https://twitter.com\n",
                 writer.toString());
     }
