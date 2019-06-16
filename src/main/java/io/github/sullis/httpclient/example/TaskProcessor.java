@@ -64,6 +64,7 @@ public final class TaskProcessor {
         return HttpRequest.newBuilder(url.toURI())
                 .GET()
                 .header("User-Agent", HttpClientUtil.USER_AGENT)
+                .header("Accept-Charset", CharSetUtil.DEFAULT_CHARSET.name())
                 .expectContinue(true)
                 .build();
     }
