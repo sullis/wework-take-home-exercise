@@ -8,6 +8,7 @@ import java.net.http.HttpResponse;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
 public final class TaskProcessor {
@@ -28,15 +29,14 @@ public final class TaskProcessor {
 
     public CompletableFuture<TaskProcessorResult> execute() throws Exception {
         Iterator<URL> iter = _urls.iterator();
+        AtomicLong successCount = new AtomicLong(0);
+        AtomicLong failureCount = new AtomicLong(0);
         while(iter.hasNext()) {
             URL url = iter.next();
             CompletableFuture<HttpResponse<String>> responseFuture = processUrl(url);
-
-            responseFuture.thenApply(HttpResponse::body)
-                    .exceptionally(ex -> "Something is wrong!")
-                    .thenAccept(System.out::println);
+            // responseFuture.get();
         }
-        return CompletableFuture.completedFuture(TaskProcessorResult.create("TODO: FIXME"));
+        return CompletableFuture.completedFuture(TaskProcessorResult.create(successCount.get(), failureCount.get()));
     }
 
     protected CompletableFuture<HttpResponse<String>> processUrl(URL url) {

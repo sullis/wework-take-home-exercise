@@ -4,8 +4,9 @@ import com.google.auto.value.AutoValue;
 
 @AutoValue
 abstract class TaskProcessorResult {
-    static TaskProcessorResult create(String description) {
-        return new AutoValue_TaskProcessorResult(description);
+    static TaskProcessorResult create(long successCount, long failureCount) {
+        return new AutoValue_TaskProcessorResult(successCount, failureCount);
     }
-    abstract String description();
+    abstract long successCount();
+    abstract long failureCount();
 }
