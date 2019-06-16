@@ -8,6 +8,7 @@ import java.net.http.HttpResponse;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
@@ -34,7 +35,7 @@ public final class TaskProcessor {
         while(iter.hasNext()) {
             URL url = iter.next();
             CompletableFuture<HttpResponse<String>> responseFuture = processUrl(url);
-            // responseFuture.get();
+            responseFuture.get(10, TimeUnit.SECONDS);
         }
         return CompletableFuture.completedFuture(TaskProcessorResult.create(successCount.get(), failureCount.get()));
     }
