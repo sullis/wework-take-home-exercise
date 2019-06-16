@@ -15,17 +15,16 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 public class FileParser {
+    private static final int EXPECTED_FIELDS = 6;
 
-    public Iterator<Either<LineParseProblem, URL>> parse(java.io.InputStream input, Charset charset) throws IOException {
+    public Iterator<Either<LineStatus, URL>> parse(java.io.InputStream input, Charset charset) throws IOException {
         InputStreamReader reader = new InputStreamReader(input, charset);
         CSVParser parser = CSVFormat.DEFAULT.parse(reader);
-        Iterator<CSVRecord> iter = parser.iterator();
-        iter.next();  // first line is a header
-        return new CsvRecordIterator(iter);
+        return new CsvRecordIterator(parser.iterator());
     }
 
     private class CsvRecordIterator
-      implements Iterator<Either<LineParseProblem, URL>> {
+      implements Iterator<Either<LineStatus, URL>> {
         private Iterator<CSVRecord> _iter;
         private AtomicLong _lineCount = new AtomicLong(0);
 
@@ -39,14 +38,35 @@ public class FileParser {
         }
 
         @Override
-        public Either<LineParseProblem, URL> next() {
+        public Either<LineStatus, URL> next() {
             CSVRecord record = _iter.next();
             long lineNum = _lineCount.incrementAndGet();
+            if (record.size() == 0) {
+                return Either.left(LineStatus.create(
+                        lineNum,
+                        false,
+                        "Blank line"));
+            }
+            if (record.size() != EXPECTED_FIELDS) {
+                return Either.left(LineStatus.create(
+                        lineNum,
+                        false,
+                        "Expected " + EXPECTED_FIELDS + " fields. Actual: " + record.size()));
+            }
+            if ("Rank".equals(record.get(0))) {
+                return Either.left(LineStatus.create(
+                        lineNum,
+                        true,
+                        "File header"));
+            }
             String website = record.get(1).trim();
             try {
                 return Either.right(new URL("https://" + website));
             } catch (MalformedURLException ex) {
-                return Either.left(LineParseProblem.create(lineNum, ex.getMessage()));
+                return Either.left(LineStatus.create(
+                        lineNum,
+                        false,
+                        "Malformed url: " + website));
             }
         }
     }
