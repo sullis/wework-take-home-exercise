@@ -2,59 +2,52 @@ package io.github.sullis.httpclient.example;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import com.google.common.collect.ImmutableList;
+import java.nio.charset.Charset;
+import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicLong;
+
+import io.atlassian.fugue.Either;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
-import com.google.auto.value.AutoValue;
+import org.apache.commons.csv.CSVRecord;
 
 public class FileParser {
 
-    public FileParseResult parse(java.io.File file) throws IOException {
-        if (!file.exists()) {
-            throw new FileParseException("file does not exist");
-        }
-        FileReader reader = new FileReader(file);
+    public Iterator<Either<LineParseProblem, URL>> parse(java.io.InputStream input, Charset charset) throws IOException {
+        InputStreamReader reader = new InputStreamReader(input, charset);
         CSVParser parser = CSVFormat.DEFAULT.parse(reader);
-        ImmutableList.Builder urlListBuilder = ImmutableList.builder();
-        ImmutableList.Builder problemListBuilder = ImmutableList.builder();
-        parser.iterator().forEachRemaining(record -> {
-            final long lineNum = parser.getCurrentLineNumber();
-            System.out.println(lineNum);
-            if (lineNum > 1) {
-                String website = record.get(1);
-                try {
-                    urlListBuilder.add(new URL("https://" + website));
-                }
-                catch (MalformedURLException ex) {
-                    problemListBuilder.add(LineParseProblem.create(lineNum, ex.getMessage()));
-                }
+        Iterator<CSVRecord> iter = parser.iterator();
+        iter.next();  // first line is a header
+        return new CsvRecordIterator(iter);
+    }
+
+    private class CsvRecordIterator
+      implements Iterator<Either<LineParseProblem, URL>> {
+        private Iterator<CSVRecord> _iter;
+        private AtomicLong _lineCount = new AtomicLong(0);
+
+        public CsvRecordIterator(Iterator<CSVRecord> iter) {
+            _iter = iter;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return _iter.hasNext();
+        }
+
+        @Override
+        public Either<LineParseProblem, URL> next() {
+            CSVRecord record = _iter.next();
+            long lineNum = _lineCount.incrementAndGet();
+            String website = record.get(1).trim();
+            try {
+                return Either.right(new URL("https://" + website));
+            } catch (MalformedURLException ex) {
+                return Either.left(LineParseProblem.create(lineNum, ex.getMessage()));
             }
-        });
-        return new FileParseResult(urlListBuilder.build(), problemListBuilder.build());
-    }
-
-    static class FileParseResult {
-        private ImmutableList<URL> _urls;
-        private ImmutableList<LineParseProblem> _problems;
-
-        public FileParseResult(ImmutableList<URL> urls, ImmutableList<LineParseProblem> problems) {
-            this._urls = urls;
-            this._problems = problems;
-        }
-
-        public ImmutableList<LineParseProblem> getProblems() { return _problems; }
-        public ImmutableList<URL> getUrls() { return _urls; }
-    }
-
-    static class FileParseException extends RuntimeException {
-        public FileParseException(String msg) {
-            super(msg);
-        }
-
-        public FileParseException(String msg, Exception ex) {
-            super(msg, ex);
         }
     }
 }
