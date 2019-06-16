@@ -28,7 +28,10 @@ public class FileParserTest {
 
     @Test
     public void fileWithOneBadLine() throws Exception {
-        checkFile(oneBadLine, 4, 2, 1);
+        ImmutableList<URL> urls = checkFile(oneBadLine, 4, 2, 1);
+        assertEquals(
+                "[https://facebook.com/, https://google.com/]",
+                urls.toString());
     }
 
     @Test
@@ -37,7 +40,8 @@ public class FileParserTest {
     }
 
 
-    private void checkFile(File file, int expectedTotal, int expectedUrlCount, int expectedHeaderCount) throws Exception {
+    private ImmutableList<URL> checkFile(File file, int expectedTotal, int expectedUrlCount, int expectedHeaderCount) throws Exception {
+        ImmutableList.Builder urlListBuilder = ImmutableList.builder();
         try (FileInputStream input = new FileInputStream(file)) {
             Iterator<Either<LineStatus, URL>> iter = new FileParser().parse(input, CharSetUtil.DEFAULT_CHARSET);
             long urlCount = 0;
@@ -48,6 +52,7 @@ public class FileParserTest {
                 total++;
                 if (item.isRight()) {
                     urlCount++;
+                    urlListBuilder.add(item.right().get());
                 }
                 if (item.isLeft() && (item.left().get().isHeader())) {
                     headerCount++;
@@ -58,6 +63,7 @@ public class FileParserTest {
             assertEquals(expectedUrlCount, urlCount);
             assertFalse(iter.hasNext());
         }
+        return urlListBuilder.build();
     }
 
     @Test
