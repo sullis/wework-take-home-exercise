@@ -6,6 +6,7 @@ public class AbstractTest {
     static {
         Properties props = System.getProperties();
         props.setProperty("jdk.internal.httpclient.debug", "true");
-        props.setProperty("org.slf4j.simpleLogger.log.java.net.http", "debug");
+        props.setProperty("jdk.httpclient.HttpClient.log", "errors,requests,headers");
+        props.setProperty("org.slf4j.simpleLogger.log.jdk.httpclient.HttpClient", "debug");
     }
 }
