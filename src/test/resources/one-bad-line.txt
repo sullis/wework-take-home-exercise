@@ -1,0 +1,4 @@
+"Rank","URL","Linking Root Domains","External Links","mozRank","mozTrust"
+1,"facebook.com/",9616487,1688316928,9.54,9.34
+2
+3,"google.com/",5868081,807173458,9.30,9.27

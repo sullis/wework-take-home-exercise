@@ -11,9 +11,10 @@ import java.net.URL;
 import java.util.Iterator;
 
 public class FileParserTest {
-    private File twelveUrls = new File("./src/test/resources/twelve-urls.txt");
-    private File noHeader = new File("./src/test/resources/no-header.txt");
-    private File blankLines = new File("./src/test/resources/blank-lines.txt");
+    private File twelveUrls = load("twelve-urls.txt");
+    private File noHeader = load("no-header.txt");
+    private File blankLines = load("blank-lines.txt");
+    private File oneBadLine = load("one-bad-line.txt");
 
     @Test
     public void fileWithTwelveUrls() throws Exception {
@@ -23,6 +24,11 @@ public class FileParserTest {
     @Test
     public void fileWithNoHeader() throws Exception {
         checkFile(noHeader, 12, 12, 0);
+    }
+
+    @Test
+    public void fileWithOneBadLine() throws Exception {
+        checkFile(oneBadLine, 4, 2, 1);
     }
 
     @Test
@@ -69,4 +75,10 @@ public class FileParserTest {
         assertEquals(12, urlListBuilder.build().size());
     }
 
+    static private File load(String filename) {
+        File f = new File("./src/test/resources/" + filename);
+        assertTrue(f.exists());
+        assertFalse(f.isDirectory());
+        return f;
+    }
 }
