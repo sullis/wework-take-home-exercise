@@ -8,12 +8,10 @@ import java.util.concurrent.CompletableFuture;
 
 public class TaskProcessor {
     private final HttpClient _httpClient;
-    private final boolean _failFast;
     private final int _maxConcurrency;
 
-    public TaskProcessor(HttpClient client, boolean failFast, int maxConcurrency) {
+    public TaskProcessor(HttpClient client, int maxConcurrency) {
         this._httpClient = client;
-        this._failFast = failFast;
         this._maxConcurrency = maxConcurrency;
     }
 
