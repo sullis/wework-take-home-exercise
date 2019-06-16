@@ -9,8 +9,12 @@ public class AbstractTest {
 
     static void initLogging() {
         Properties props = System.getProperties();
-        props.setProperty("jdk.internal.httpclient.debug", "true");
-        props.setProperty("jdk.httpclient.HttpClient.log", "all");
+
+        props.setProperty("jdk.internal.httpclient.debug", "false");
+
+        // use "all" to enable verbose output
+        props.setProperty("jdk.httpclient.HttpClient.log", "off");
+
         props.setProperty("org.slf4j.simpleLogger.log.jdk.httpclient.HttpClient", "debug");
     }
 }
