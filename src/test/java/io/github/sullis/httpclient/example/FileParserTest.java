@@ -10,7 +10,7 @@ import java.io.FileInputStream;
 import java.net.URL;
 import java.util.Iterator;
 
-public class FileParserTest {
+public class FileParserTest extends AbstractTest {
     private File twelveUrls = load("twelve-urls.txt");
     private File noHeader = load("no-header.txt");
     private File blankLines = load("blank-lines.txt");

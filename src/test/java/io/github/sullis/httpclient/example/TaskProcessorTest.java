@@ -10,7 +10,7 @@ import java.net.http.HttpClient;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-public class TaskProcessorTest {
+public class TaskProcessorTest extends AbstractTest {
     @Test
     public void happyPath() throws Exception {
         ImmutableList<URL> urls = ImmutableList.of(
