@@ -10,6 +10,8 @@ import java.io.FileInputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 public class Main {
@@ -45,7 +47,8 @@ public class Main {
                 getListener(verbose),
                 urlStream,
                 20);
-        p.execute();
+        CompletableFuture<TaskProcessorResult> future = p.execute();
+        TaskProcessorResult processorResult = future.get();
         System.exit(0);
       }
     } catch (ParseException ex) {
