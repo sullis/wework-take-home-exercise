@@ -10,7 +10,7 @@ public class HttpClientUtil {
 
     static public HttpClient build() {
         return HttpClient.newBuilder()
-                .connectTimeout(Duration.ofMillis(10))
+                .connectTimeout(Duration.ofMillis(2000))
                 .followRedirects(HttpClient.Redirect.ALWAYS)
                 .build();
     }
