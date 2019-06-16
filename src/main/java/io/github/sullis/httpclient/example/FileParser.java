@@ -42,12 +42,6 @@ public class FileParser {
         public Either<LineStatus, URL> next() {
             CSVRecord record = _iter.next();
             long lineNum = _lineCount.incrementAndGet();
-            if (record.size() == 0) {
-                return Either.left(LineStatus.create(
-                        lineNum,
-                        false,
-                        "Blank line"));
-            }
             if (record.size() != EXPECTED_FIELD_COUNT) {
                 return Either.left(LineStatus.create(
                         lineNum,
