@@ -1,6 +1,5 @@
 package io.github.sullis.httpclient.example;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -8,7 +7,9 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Stream;
 
+import com.google.common.collect.Streams;
 import io.atlassian.fugue.Either;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -17,10 +18,10 @@ import org.apache.commons.csv.CSVRecord;
 public class FileParser {
     private static final int EXPECTED_FIELDS = 6;
 
-    public Iterator<Either<LineStatus, URL>> parse(java.io.InputStream input, Charset charset) throws IOException {
+    public Stream<Either<LineStatus, URL>> parse(java.io.InputStream input, Charset charset) throws IOException {
         InputStreamReader reader = new InputStreamReader(input, charset);
         CSVParser parser = CSVFormat.DEFAULT.parse(reader);
-        return new CsvRecordIterator(parser.iterator());
+        return Streams.stream(new CsvRecordIterator(parser.iterator()));
     }
 
     private class CsvRecordIterator

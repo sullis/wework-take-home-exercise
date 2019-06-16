@@ -43,7 +43,7 @@ public class FileParserTest {
     private ImmutableList<URL> checkFile(File file, int expectedTotal, int expectedUrlCount, int expectedHeaderCount) throws Exception {
         ImmutableList.Builder urlListBuilder = ImmutableList.builder();
         try (FileInputStream input = new FileInputStream(file)) {
-            Iterator<Either<LineStatus, URL>> iter = new FileParser().parse(input, CharSetUtil.DEFAULT_CHARSET);
+            Iterator<Either<LineStatus, URL>> iter = new FileParser().parse(input, CharSetUtil.DEFAULT_CHARSET).iterator();
             long urlCount = 0;
             long headerCount = 0;
             long total = 0;
@@ -70,7 +70,7 @@ public class FileParserTest {
     public void parseIteratorForEachRemaining() throws Exception {
         ImmutableList.Builder urlListBuilder = ImmutableList.builder();
         try (FileInputStream input = new FileInputStream(twelveUrls)) {
-            Iterator<Either<LineStatus, URL>> iter = new FileParser().parse(input, CharSetUtil.DEFAULT_CHARSET);
+            Iterator<Either<LineStatus, URL>> iter = new FileParser().parse(input, CharSetUtil.DEFAULT_CHARSET).iterator();
             iter.forEachRemaining(line -> {
                 if (line.isRight()) {
                     urlListBuilder.add(line.right().get());
