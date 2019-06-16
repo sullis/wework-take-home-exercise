@@ -16,7 +16,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 public class FileParser {
-    private static final int EXPECTED_FIELDS = 6;
+    private static final int EXPECTED_FIELD_COUNT = 6;
 
     public Stream<Either<LineStatus, URL>> parse(java.io.InputStream input, Charset charset) throws IOException {
         InputStreamReader reader = new InputStreamReader(input, charset);
@@ -48,11 +48,11 @@ public class FileParser {
                         false,
                         "Blank line"));
             }
-            if (record.size() != EXPECTED_FIELDS) {
+            if (record.size() != EXPECTED_FIELD_COUNT) {
                 return Either.left(LineStatus.create(
                         lineNum,
                         false,
-                        "Expected " + EXPECTED_FIELDS + " fields. Actual: " + record.size()));
+                        "Expected " + EXPECTED_FIELD_COUNT + " fields. Actual: " + record.size()));
             }
             if ("Rank".equals(record.get(0))) {
                 return Either.left(LineStatus.create(
