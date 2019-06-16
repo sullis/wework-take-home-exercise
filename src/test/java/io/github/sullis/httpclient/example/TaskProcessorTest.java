@@ -25,7 +25,8 @@ public class TaskProcessorTest extends AbstractTest {
                 20);
         CompletableFuture<TaskProcessorResult> future = processor.execute();
         TaskProcessorResult result = future.get();
-        assertNotNull(result);
+        assertEquals(2, result.successCount());
+        assertEquals(0, result.failureCount());
         assertEquals("Processing URL: https://google.com\nProcessing URL: https://twitter.com\n",
                 writer.toString());
     }

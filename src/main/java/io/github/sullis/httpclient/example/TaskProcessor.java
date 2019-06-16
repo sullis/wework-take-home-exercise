@@ -35,7 +35,12 @@ public final class TaskProcessor {
         while(iter.hasNext()) {
             URL url = iter.next();
             CompletableFuture<HttpResponse<String>> responseFuture = processUrl(url);
-            responseFuture.get(10, TimeUnit.SECONDS);
+            try {
+                responseFuture.get(10, TimeUnit.SECONDS);
+                successCount.incrementAndGet();
+            } catch (Exception ex) {
+                failureCount.incrementAndGet();
+            }
         }
         return CompletableFuture.completedFuture(TaskProcessorResult.create(successCount.get(), failureCount.get()));
     }
