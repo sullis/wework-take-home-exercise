@@ -12,11 +12,17 @@ import java.util.Iterator;
 
 public class FileParserTest {
     private File twelveUrls = new File("./src/test/resources/twelve-urls.txt");
+    private File noHeader = new File("./src/test/resources/no-header.txt");
     private File blankLines = new File("./src/test/resources/blank-lines.txt");
 
     @Test
     public void fileWithTwelveUrls() throws Exception {
         checkFile(twelveUrls, 13, 12, 1);
+    }
+
+    @Test
+    public void fileWithNoHeader() throws Exception {
+        checkFile(noHeader, 12, 12, 0);
     }
 
     @Test
