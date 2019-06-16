@@ -10,4 +10,3 @@ abstract class LineParseProblem {
     abstract long lineNumber();
     abstract String description();
 }
-
