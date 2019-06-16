@@ -15,8 +15,18 @@ public class FileParserTest {
     private File blankLines = new File("./src/test/resources/blank-lines.txt");
 
     @Test
-    public void parseIteratorHappyPath() throws Exception {
-        try (FileInputStream input = new FileInputStream(twelveUrls)) {
+    public void fileWithTwelveUrls() throws Exception {
+        checkFile(twelveUrls, 13, 12, 1);
+    }
+
+    @Test
+    public void fileWithBlankLines() throws Exception {
+        checkFile(blankLines, 0, 0, 0);
+    }
+
+
+    private void checkFile(File file, int expectedTotal, int expectedUrlCount, int expectedHeaderCount) throws Exception {
+        try (FileInputStream input = new FileInputStream(file)) {
             Iterator<Either<LineStatus, URL>> iter = new FileParser().parse(input, CharSetUtil.DEFAULT_CHARSET);
             long urlCount = 0;
             long headerCount = 0;
@@ -31,9 +41,9 @@ public class FileParserTest {
                     headerCount++;
                 }
             }
-            assertEquals(13, total);
-            assertEquals(1, headerCount);
-            assertEquals(12, urlCount);
+            assertEquals(expectedTotal, total);
+            assertEquals(expectedHeaderCount, headerCount);
+            assertEquals(expectedUrlCount, urlCount);
             assertFalse(iter.hasNext());
         }
     }
@@ -53,28 +63,4 @@ public class FileParserTest {
         assertEquals(12, urlListBuilder.build().size());
     }
 
-    @Test
-    public void fileWithBlankLines() throws Exception {
-        try (FileInputStream input = new FileInputStream(blankLines)) {
-            Iterator<Either<LineStatus, URL>> iter = new FileParser().parse(input, CharSetUtil.DEFAULT_CHARSET);
-            long urlCount = 0;
-            long headerCount = 0;
-            long total = 0;
-            while (iter.hasNext()) {
-                Either<LineStatus, URL> item = iter.next();
-                total++;
-                if (item.isRight()) {
-                    urlCount++;
-                }
-                if (item.isLeft() && (item.left().get().isHeader())) {
-                    headerCount++;
-                }
-            }
-            assertEquals(0, total);
-            assertEquals(0, headerCount);
-            assertEquals(0, urlCount);
-            assertFalse(iter.hasNext());
-        }
-
-    }
 }
