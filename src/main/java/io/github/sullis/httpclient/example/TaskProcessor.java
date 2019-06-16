@@ -4,15 +4,17 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 
 public class TaskProcessor {
     private final HttpClient _httpClient;
+    private final Optional<TaskProcessorListener> _listener;
     private final int _maxConcurrency;
 
-    public TaskProcessor(HttpClient client, int maxConcurrency) {
+    public TaskProcessor(HttpClient client, Optional<TaskProcessorListener> listener, int maxConcurrency) {
         this._httpClient = client;
+        this._listener = listener;
         this._maxConcurrency = maxConcurrency;
     }
 
