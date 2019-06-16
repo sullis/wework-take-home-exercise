@@ -1,6 +1,5 @@
 package io.github.sullis.httpclient.example;
 
-import com.google.common.collect.ImmutableList;
 import io.atlassian.fugue.Either;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
