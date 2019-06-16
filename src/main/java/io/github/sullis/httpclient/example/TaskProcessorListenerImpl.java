@@ -15,7 +15,7 @@ public class TaskProcessorListenerImpl
     @Override
     public void statusFetchStarted(URL url) {
         try {
-            _writer.write("Fetching URL: " + url);
+            _writer.write("Fetching URL: " + url + "\n");
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
