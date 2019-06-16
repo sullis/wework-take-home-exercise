@@ -7,6 +7,7 @@ import java.net.URL;
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
+import com.google.auto.value.AutoValue;
 
 public class FileParser {
 
@@ -27,21 +28,11 @@ public class FileParser {
                     urlListBuilder.add(new URL("https://" + website));
                 }
                 catch (MalformedURLException ex) {
-                    problemListBuilder.add(new LineParseProblem(lineNum, ex.getMessage()));
+                    problemListBuilder.add(LineParseProblem.create(lineNum, ex.getMessage()));
                 }
             }
         });
         return new FileParseResult(urlListBuilder.build(), problemListBuilder.build());
-    }
-
-    static class LineParseProblem {
-      private final long _lineNumber;
-      private final String _description;
-
-      public LineParseProblem(long lineNumber, String description) {
-        _lineNumber = lineNumber;
-        _description = description;
-      }
     }
 
     static class FileParseResult {
