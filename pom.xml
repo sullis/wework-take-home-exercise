@@ -105,6 +105,11 @@
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
+          <archive>
+            <manifest>
+              <mainClass>io.github.sullis.httpclient.example.Main</mainClass>
+            </manifest>
+          </archive>
         </configuration>
         <executions>
           <execution>
