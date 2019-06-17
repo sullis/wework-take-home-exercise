@@ -9,7 +9,7 @@ This project requires:
 
 # Java 11 development kit
 
-- ([Amazon Corretto 11.x](https://docs.aws.amazon.com/corretto/latest/corretto-11-ug/downloads-list.html))
+- [Amazon Corretto 11.x](https://docs.aws.amazon.com/corretto/latest/corretto-11-ug/downloads-list.html)
 
 # Build
 
