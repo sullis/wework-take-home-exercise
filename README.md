@@ -18,6 +18,13 @@ This project requires:
 ./build.sh  && ./run.sh
 
 ```
+# HTTP client implementation
+
+This project uses the Java platform HttpClient:
+
+[java.net.http.HttpClient](https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpClient.html)
+
+This HttpClient is available in Java 11 and above.  (It is not available in Java 8)
 
 # Specification
 
