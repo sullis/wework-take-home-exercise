@@ -25,6 +25,7 @@ public class OutputFileWriter implements Closeable {
 
     public synchronized void close() throws IOException {
         if (_writer != null) {
+            _writer.flush();
             _writer.close();
         }
     }
