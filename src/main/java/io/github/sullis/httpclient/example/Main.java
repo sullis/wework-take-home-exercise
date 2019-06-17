@@ -48,7 +48,7 @@ public class Main {
       }
       try (FileInputStream input = new FileInputStream(f)) {
         FileParser parser = new FileParser();
-        OutputFileWriter outputFileWriter = new OutputFileWriter();
+        OutputFileWriter outputFileWriter = new OutputFileWriter(OutputFileWriter.DEFAULT_FILENAME);
         Stream<Either<IgnoredLine, URL>> stream = parser.parse(input, CharSetUtil.DEFAULT_CHARSET);
         Stream<URL> urlStream = stream.filter(item -> item.isRight()).map(item -> item.right().get());
         UrlProcessor p = new UrlProcessor(HttpClientUtil.build(),

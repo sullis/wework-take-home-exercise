@@ -5,13 +5,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class OutputFileWriter implements Closeable {
-    static private final String DEFAULT_FILENAME = "results.txt";
+    static public final String DEFAULT_FILENAME = "results.txt";
 
     private final FileWriter _writer;
-
-    public OutputFileWriter() throws IOException {
-        this(DEFAULT_FILENAME);
-    }
 
     public OutputFileWriter(String filename) throws IOException {
       _writer = new FileWriter(filename, CharSetUtil.DEFAULT_CHARSET, false);
