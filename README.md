@@ -28,7 +28,7 @@ This project requires:
 
 - [Apache commons-cli](https://commons.apache.org/proper/commons-cli/)
 - [Apache commons-csv](https://commons.apache.org/proper/commons-csv/)
-- [Google guava](https://github.com/google/guava)
+- [Google Guava](https://github.com/google/guava)
 - [Google AutoValue](https://github.com/google/auto/blob/master/value/userguide/index.md)
 - [Atlassian Fugue](https://bitbucket.org/atlassian/fugue/src/master/readme.md)
 - [slf4j](https://www.slf4j.org/)
