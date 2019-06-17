@@ -14,8 +14,8 @@ public class OutputFileWriter implements Closeable {
       _writer = new FileWriter(filename, CharSetUtil.DEFAULT_CHARSET, false);
     }
 
-    public synchronized void writeLine(URL u, boolean success) throws IOException {
-        _writer.write("\"" + u + "\"," + success + "\n");
+    public synchronized void writeLine(URL u) throws IOException {
+        _writer.write("\"" + u + "\"\n");
         _writer.flush();
     }
 

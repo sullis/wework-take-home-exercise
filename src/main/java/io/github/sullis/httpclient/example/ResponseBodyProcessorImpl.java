@@ -17,7 +17,7 @@ public class ResponseBodyProcessorImpl implements ResponseBodyProcessor {
     public void processHttpResponse(URL url, int statusCode, String responseBody) {
         try {
             if (_regexPattern.matcher(responseBody).find()) {
-                _writer.writeLine(url, true);
+                _writer.writeLine(url);
             }
         } catch (IOException ex) {
             throw new RuntimeException(ex);

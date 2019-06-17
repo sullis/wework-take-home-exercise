@@ -23,11 +23,11 @@ public class OutputFileWriterTest extends AbstractTest {
         final File file = new File(filename);
         try {
             assertFalse(file.exists());
-            saveFileAndVerify(filename, true, aaa, bbb);
+            saveFileAndVerify(filename, aaa, bbb);
             assertTrue(file.exists());
 
             // overwrite the file with new content
-            saveFileAndVerify(filename, false, ccc, ddd);
+            saveFileAndVerify(filename, ccc, ddd);
             assertTrue(file.exists());
 
         } finally {
@@ -35,18 +35,18 @@ public class OutputFileWriterTest extends AbstractTest {
         }
     }
 
-    private static void saveFileAndVerify(String filename, boolean urlSuccess, URL... urls) throws IOException {
+    private static void saveFileAndVerify(String filename, URL... urls) throws IOException {
         final File file = new File(filename);
         final OutputFileWriter writer = new OutputFileWriter(filename);
         for (URL u : urls) {
-            writer.writeLine(u, urlSuccess);
+            writer.writeLine(u);
         }
         writer.close();
         assertTrue(file.exists());
         ImmutableList<String> fileContent = Files.asCharSource(file, CharSetUtil.DEFAULT_CHARSET).readLines();
         assertEquals(urls.length, fileContent.size());
         for (int i = 0; i < urls.length; i++) {
-            String expected = "\"" + urls[i] + "\"," + urlSuccess;
+            String expected = "\"" + urls[i] + "\"";
             assertEquals(expected, fileContent.get(i));
         }
 
