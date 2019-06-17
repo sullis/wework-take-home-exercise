@@ -31,7 +31,7 @@ public final class UrlProcessor {
         this._responseBodyProcessor = responseBodyProcessor;
     }
 
-    public CompletableFuture<UrlProcessorResult> execute() throws Exception {
+    public CompletableFuture<UrlProcessorResult> execute() {
         Iterator<URL> iter = _urls.iterator();
         AtomicLong processedCount = new AtomicLong(0);
         AtomicLong failureCount = new AtomicLong(0);
