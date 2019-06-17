@@ -32,7 +32,7 @@ This project requires:
 
 # Specification
 
-- [https://s3.amazonaws.com/fieldlens-public/Website+Searcher.html]
+- [Searcher](https://s3.amazonaws.com/fieldlens-public/Website+Searcher.html)
 
 
 # Third party libraries
