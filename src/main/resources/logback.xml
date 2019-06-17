@@ -6,7 +6,7 @@
     </encoder>
   </appender>
 
-  <logger name="io.github.sullis.httpclient.example" level="DEBUG"/>
+  <logger name="io.github.sullis.httpclient.example" level="ERROR"/>
 
   <root level="ERROR">
     <appender-ref ref="STDOUT" />
