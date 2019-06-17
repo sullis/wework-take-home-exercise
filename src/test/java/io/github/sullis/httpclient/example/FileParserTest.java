@@ -27,7 +27,7 @@ public class FileParserTest extends AbstractTest {
     public void fileWithOneBadLine() throws Exception {
         ImmutableList<URL> urls = checkFile(oneBadLine, 4, 2, 1);
         assertEquals(
-                "[https://facebook.com/, https://google.com/]",
+                "[http://facebook.com/, http://google.com/]",
                 urls.toString());
     }
 

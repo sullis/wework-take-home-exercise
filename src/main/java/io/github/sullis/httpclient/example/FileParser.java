@@ -54,7 +54,7 @@ public class FileParser {
             }
             final String website = record.get(1).trim();
             try {
-                return Either.right(new URL("https://" + website));
+                return Either.right(new URL("http://" + website));
             } catch (MalformedURLException ex) {
                 return Either.left(IgnoredLine.create(
                         lineNum,

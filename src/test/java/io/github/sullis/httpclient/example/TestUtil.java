@@ -17,14 +17,15 @@ public class TestUtil {
     static public final File oneBadLine = load("one-bad-line.txt");
 
     static public final ImmutableList<URL> URL_LIST = ImmutableList.of(
-            makeUrl("https://people.com.cn/"),
-            makeUrl("https://google.com"),
-            makeUrl("https://twitter.com"),
-            makeUrl("https://microsoft.com"),
-            makeUrl("https://www.cdc.gov"),
-            makeUrl("https://npr.org"),
-            makeUrl("https://craigslist.org"),
-            makeUrl("https://paypal.com")
+            makeUrl("http://people.com.cn/"),
+            makeUrl("http://infoseek.co.jp/"),
+            makeUrl("http://google.com"),
+            makeUrl("http://twitter.com"),
+            makeUrl("http://microsoft.com"),
+            makeUrl("http://www.cdc.gov"),
+            makeUrl("http://npr.org"),
+            makeUrl("http://craigslist.org"),
+            makeUrl("http://paypal.com")
     );
 
     static public URL makeUrl(String s) {

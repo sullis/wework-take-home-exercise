@@ -104,7 +104,7 @@ public final class UrlProcessor {
     protected HttpRequest buildRequest(URL url) throws URISyntaxException {
         return HttpRequest.newBuilder(url.toURI())
                 .GET()
-                .timeout(Duration.ofMillis(10000))
+                .timeout(Duration.ofMillis(60000))
                 .header("User-Agent", HttpClientUtil.USER_AGENT)
                 .header("Accept-Charset", CharSetUtil.DEFAULT_CHARSET.name())
                 .build();
