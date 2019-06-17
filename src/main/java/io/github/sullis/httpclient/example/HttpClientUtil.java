@@ -11,7 +11,7 @@ public class HttpClientUtil {
     static public HttpClient build() {
         return HttpClient.newBuilder()
                 .connectTimeout(Duration.ofMillis(2000))
-                .followRedirects(HttpClient.Redirect.NORMAL)
+                .followRedirects(HttpClient.Redirect.NEVER)
                 .version(HttpClient.Version.HTTP_1_1)
                 .build();
     }
