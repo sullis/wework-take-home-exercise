@@ -29,3 +29,5 @@ output/
 .classpath
 .project
 .settings/
+
+results.txt
