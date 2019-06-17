@@ -11,22 +11,12 @@ This project requires:
 
 - [Amazon Corretto 11.x](https://docs.aws.amazon.com/corretto/latest/corretto-11-ug/downloads-list.html)
 
-# Build
+# Build and run
 
 ```
 
 ./build.sh
-
-
-```
-
-
-# Run
-
-```
-
 ./run.sh
-
 
 ```
 
