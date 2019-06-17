@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.io.Writer;
 
-public class TaskProcessorListenerImpl
-        implements TaskProcessorListener {
+public class UrlProcessorListenerImpl
+        implements UrlProcessorListener {
     private Writer _writer;
 
-    public TaskProcessorListenerImpl(Writer writer) {
+    public UrlProcessorListenerImpl(Writer writer) {
         _writer = writer;
     }
 

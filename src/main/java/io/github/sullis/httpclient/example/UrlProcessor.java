@@ -12,23 +12,23 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
-public final class TaskProcessor {
+public final class UrlProcessor {
     private final HttpClient _httpClient;
-    private final Optional<TaskProcessorListener> _listener;
+    private final Optional<UrlProcessorListener> _listener;
     private final int _maxConcurrency;
     private final Stream<URL> _urls;
 
-    public TaskProcessor(HttpClient client,
-                         Optional<TaskProcessorListener> listener,
-                         Stream<URL> urls,
-                         int maxConcurrency) {
+    public UrlProcessor(HttpClient client,
+                        Optional<UrlProcessorListener> listener,
+                        Stream<URL> urls,
+                        int maxConcurrency) {
         this._httpClient = client;
         this._listener = listener;
         this._maxConcurrency = maxConcurrency;
         this._urls = urls;
     }
 
-    public CompletableFuture<TaskProcessorResult> execute() throws Exception {
+    public CompletableFuture<UrlProcessorResult> execute() throws Exception {
         Iterator<URL> iter = _urls.iterator();
         AtomicLong successCount = new AtomicLong(0);
         AtomicLong failureCount = new AtomicLong(0);
@@ -42,7 +42,7 @@ public final class TaskProcessor {
                 failureCount.incrementAndGet();
             }
         }
-        return CompletableFuture.completedFuture(TaskProcessorResult.create(successCount.get(), failureCount.get()));
+        return CompletableFuture.completedFuture(UrlProcessorResult.create(successCount.get(), failureCount.get()));
     }
 
     protected CompletableFuture<HttpResponse<String>> processUrl(URL url) {

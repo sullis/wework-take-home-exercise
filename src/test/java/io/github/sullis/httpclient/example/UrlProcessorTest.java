@@ -10,7 +10,7 @@ import java.net.http.HttpClient;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-public class TaskProcessorTest extends AbstractTest {
+public class UrlProcessorTest extends AbstractTest {
     @Test
     public void happyPath() throws Exception {
         ImmutableList<URL> urls = ImmutableList.of(
@@ -18,13 +18,13 @@ public class TaskProcessorTest extends AbstractTest {
                 new URL("https://twitter.com"));
         StringWriter writer = new StringWriter();
         HttpClient client = HttpClientUtil.build();
-        TaskProcessorListener listener = new TaskProcessorListenerImpl(writer);
-        TaskProcessor processor = new TaskProcessor(client,
+        UrlProcessorListener listener = new UrlProcessorListenerImpl(writer);
+        UrlProcessor processor = new UrlProcessor(client,
                 Optional.of(listener),
                 urls.stream(),
                 20);
-        CompletableFuture<TaskProcessorResult> future = processor.execute();
-        TaskProcessorResult result = future.get();
+        CompletableFuture<UrlProcessorResult> future = processor.execute();
+        UrlProcessorResult result = future.get();
         assertEquals(2, result.successCount());
         assertEquals(0, result.failureCount());
         assertEquals("Processing URL: https://google.com\nProcessing URL: https://twitter.com\n",
