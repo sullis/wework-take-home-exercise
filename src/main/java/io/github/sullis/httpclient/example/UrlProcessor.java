@@ -37,31 +37,37 @@ public final class UrlProcessor {
     }
 
     public CompletableFuture<UrlProcessorResult> execute() {
-        Semaphore httpSemaphore = new Semaphore(_maxConcurrentHttpRequests);
-        Iterator<URL> iter = _urls.iterator();
+        final Semaphore httpSemaphore = new Semaphore(_maxConcurrentHttpRequests);
+        final Iterator<URL> iter = _urls.iterator();
         final AtomicLong processedCount = new AtomicLong(0);
         final AtomicLong failureCount = new AtomicLong(0);
         while (iter.hasNext()) {
             try {
-                URL url = iter.next();
+                final URL url = iter.next();
+                _logger.debug("PERMIT NEEDED [" + url + "]");
                 httpSemaphore.acquireUninterruptibly();
-                if (_logger.isDebugEnabled()) {
-                    _logger.debug("httpSemaphore: availablePermits="
-                            + httpSemaphore.availablePermits());
-                }
+                _logger.debug("PERMIT ACQUIRED [" + url + "]");
+                _logger.debug("httpSemaphore: availablePermits="
+                        + httpSemaphore.availablePermits());
                 CompletableFuture<HttpResponse<String>> responseFuture = processUrl(url);
-                responseFuture.whenCompleteAsync( (httpResponse, throwable) -> {
-                    httpSemaphore.release();
+                responseFuture.whenCompleteAsync((httpResponse, throwable) -> {
                     if (httpResponse != null) {
                         processedCount.incrementAndGet();
                     }
                     if (throwable != null) {
                         failureCount.incrementAndGet();
                     }
+                    httpSemaphore.release();
+                    _logger.debug("PERMIT RELEASED [" + url + "]");
                 });
             } catch (Exception ex) {
                 return CompletableFuture.failedFuture(ex);
             }
+        }
+        if (_logger.isDebugEnabled()) {
+            _logger.debug("Calling [acquireUninterruptibly]. "
+                    + "availablePermits="
+                    + httpSemaphore.availablePermits());
         }
         httpSemaphore.acquireUninterruptibly(_maxConcurrentHttpRequests);
         return CompletableFuture.completedFuture(UrlProcessorResult.create(processedCount.get(), failureCount.get()));
