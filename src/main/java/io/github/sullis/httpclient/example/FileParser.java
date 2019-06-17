@@ -18,14 +18,14 @@ import org.apache.commons.csv.CSVRecord;
 public class FileParser {
     private static final int EXPECTED_FIELD_COUNT = 6;
 
-    public Stream<Either<LineStatus, URL>> parse(java.io.InputStream input, Charset charset) throws IOException {
+    public Stream<Either<IgnoredLine, URL>> parse(java.io.InputStream input, Charset charset) throws IOException {
         InputStreamReader reader = new InputStreamReader(input, charset);
         CSVParser parser = CSVFormat.DEFAULT.parse(reader);
         return Streams.stream(new CsvRecordIterator(parser.iterator()));
     }
 
     private class CsvRecordIterator
-      implements Iterator<Either<LineStatus, URL>> {
+      implements Iterator<Either<IgnoredLine, URL>> {
         private Iterator<CSVRecord> _iter;
         private AtomicLong _lineCount = new AtomicLong(0);
 
@@ -39,17 +39,17 @@ public class FileParser {
         }
 
         @Override
-        public Either<LineStatus, URL> next() {
+        public Either<IgnoredLine, URL> next() {
             CSVRecord record = _iter.next();
             long lineNum = _lineCount.incrementAndGet();
             if (record.size() != EXPECTED_FIELD_COUNT) {
-                return Either.left(LineStatus.create(
+                return Either.left(IgnoredLine.create(
                         lineNum,
                         false,
                         "Expected " + EXPECTED_FIELD_COUNT + " fields. Actual: " + record.size()));
             }
             if ("Rank".equals(record.get(0))) {
-                return Either.left(LineStatus.create(
+                return Either.left(IgnoredLine.create(
                         lineNum,
                         true,
                         "File header"));
@@ -58,7 +58,7 @@ public class FileParser {
             try {
                 return Either.right(new URL("https://" + website));
             } catch (MalformedURLException ex) {
-                return Either.left(LineStatus.create(
+                return Either.left(IgnoredLine.create(
                         lineNum,
                         false,
                         "Malformed url: " + website));

@@ -41,7 +41,7 @@ public class Main {
       }
       try (FileInputStream input = new FileInputStream(f)) {
         FileParser parser = new FileParser();
-        Stream<Either<LineStatus, URL>> stream = parser.parse(input, CharSetUtil.DEFAULT_CHARSET);
+        Stream<Either<IgnoredLine, URL>> stream = parser.parse(input, CharSetUtil.DEFAULT_CHARSET);
         Stream<URL> urlStream = stream.filter(item -> item.isRight()).map(item -> item.right().get());
         TaskProcessor p = new TaskProcessor(HttpClientUtil.build(),
                 getListener(verbose),
