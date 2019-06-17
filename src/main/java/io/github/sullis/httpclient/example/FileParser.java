@@ -12,7 +12,6 @@ import java.util.stream.Stream;
 import com.google.common.collect.Streams;
 import io.atlassian.fugue.Either;
 import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 public class FileParser {
@@ -20,8 +19,7 @@ public class FileParser {
 
     public Stream<Either<IgnoredLine, URL>> parse(java.io.InputStream input, Charset charset) throws IOException {
         InputStreamReader reader = new InputStreamReader(input, charset);
-        CSVParser parser = CSVFormat.DEFAULT.parse(reader);
-        return Streams.stream(new CsvRecordIterator(parser.iterator()));
+        return Streams.stream(new CsvRecordIterator(CSVFormat.DEFAULT.parse(reader).iterator()));
     }
 
     private class CsvRecordIterator
