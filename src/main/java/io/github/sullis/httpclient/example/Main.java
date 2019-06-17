@@ -60,7 +60,12 @@ public class Main {
                 new ResponseBodyProcessorImpl(outputFileWriter, DEFAULT_PATTERN));
         CompletableFuture<UrlProcessorResult> future = p.execute();
         UrlProcessorResult processorResult = future.get();
-        return MainResult.create(ExitCode.OK, Optional.empty());
+        if (processorResult.processedCount() > 0) {
+          return MainResult.create(ExitCode.OK, Optional.empty());
+        }
+        else {
+          return MainResult.create(ExitCode.ERROR, Optional.of("Processed count: " + processorResult.processedCount()));
+        }
       }
     } catch (ParseException ex) {
       System.err.println();
