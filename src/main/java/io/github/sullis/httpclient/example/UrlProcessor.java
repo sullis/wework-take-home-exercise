@@ -33,19 +33,19 @@ public final class UrlProcessor {
 
     public CompletableFuture<UrlProcessorResult> execute() throws Exception {
         Iterator<URL> iter = _urls.iterator();
-        AtomicLong successCount = new AtomicLong(0);
+        AtomicLong processedCount = new AtomicLong(0);
         AtomicLong failureCount = new AtomicLong(0);
         while(iter.hasNext()) {
             URL url = iter.next();
             CompletableFuture<HttpResponse<String>> responseFuture = processUrl(url);
             try {
                 responseFuture.get(10, TimeUnit.SECONDS);
-                successCount.incrementAndGet();
+                processedCount.incrementAndGet();
             } catch (Exception ex) {
                 failureCount.incrementAndGet();
             }
         }
-        return CompletableFuture.completedFuture(UrlProcessorResult.create(successCount.get(), failureCount.get()));
+        return CompletableFuture.completedFuture(UrlProcessorResult.create(processedCount.get(), failureCount.get()));
     }
 
     protected CompletableFuture<HttpResponse<String>> processUrl(URL url) {

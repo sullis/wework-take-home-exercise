@@ -36,7 +36,7 @@ public class UrlProcessorTest extends AbstractTest {
                     responseBodyProcessor);
             CompletableFuture<UrlProcessorResult> future = processor.execute();
             UrlProcessorResult result = future.get();
-            assertEquals(2, result.successCount());
+            assertEquals(2, result.processedCount());
             assertEquals(0, result.failureCount());
             assertEquals("Processing URL: https://google.com\nProcessing URL: https://twitter.com\n",
                     listenerWriter.toString());
