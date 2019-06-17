@@ -8,44 +8,48 @@ import java.net.http.HttpResponse;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
 public final class UrlProcessor {
     private final HttpClient _httpClient;
     private final Optional<UrlProcessorListener> _listener;
-    private final int _maxConcurrency;
+    private final int _maxConcurrentHttpRequests;
     private final Stream<URL> _urls;
     private final ResponseBodyProcessor _responseBodyProcessor;
 
     public UrlProcessor(HttpClient client,
                         Optional<UrlProcessorListener> listener,
                         Stream<URL> urls,
-                        int maxConcurrency,
+                        int maxConcurrentHttpRequests,
                         ResponseBodyProcessor responseBodyProcessor) {
         this._httpClient = client;
         this._listener = listener;
-        this._maxConcurrency = maxConcurrency;
+        this._maxConcurrentHttpRequests = maxConcurrentHttpRequests;
         this._urls = urls;
         this._responseBodyProcessor = responseBodyProcessor;
     }
 
     public CompletableFuture<UrlProcessorResult> execute() {
+        Semaphore httpSemaphore = new Semaphore(_maxConcurrentHttpRequests);
         Iterator<URL> iter = _urls.iterator();
-        AtomicLong processedCount = new AtomicLong(0);
-        AtomicLong failureCount = new AtomicLong(0);
-        while(iter.hasNext()) {
-            URL url = iter.next();
-            CompletableFuture<HttpResponse<String>> responseFuture = processUrl(url);
+        long processedCount = 0;
+        long failureCount = 0;
+        while (iter.hasNext()) {
             try {
+                httpSemaphore.acquireUninterruptibly();
+                URL url = iter.next();
+                CompletableFuture<HttpResponse<String>> responseFuture = processUrl(url);
                 responseFuture.get(10, TimeUnit.SECONDS);
-                processedCount.incrementAndGet();
+                processedCount++;
             } catch (Exception ex) {
-                failureCount.incrementAndGet();
+                failureCount++;
+            } finally {
+                httpSemaphore.release();
             }
         }
-        return CompletableFuture.completedFuture(UrlProcessorResult.create(processedCount.get(), failureCount.get()));
+        return CompletableFuture.completedFuture(UrlProcessorResult.create(processedCount, failureCount));
     }
 
     protected CompletableFuture<HttpResponse<String>> processUrl(URL url) {

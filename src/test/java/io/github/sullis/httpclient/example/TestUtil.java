@@ -1,5 +1,7 @@
 package io.github.sullis.httpclient.example;
 
+import com.google.common.collect.ImmutableList;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -14,12 +16,25 @@ public class TestUtil {
     static public final File blankLines = load("blank-lines.txt");
     static public final File oneBadLine = load("one-bad-line.txt");
 
-    static public URL makeRandomUrl() {
+    static public final ImmutableList<URL> URL_LIST = ImmutableList.of(
+            makeUrl("https://google.com"),
+            makeUrl("https://twitter.com"),
+            makeUrl("https://microsoft.com"),
+            makeUrl("https://www.cdc.gov"),
+            makeUrl("https://npr.org"),
+            makeUrl("https://craigslist.org"),
+            makeUrl("https://nytimes.com")
+    );
+
+    static public URL makeUrl(String s) {
         try {
-            return new URL("https://" + UUID.randomUUID() + ".com");
+            return new URL(s);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
+    }
+    static public URL makeRandomUrl() {
+        return makeUrl("https://" + UUID.randomUUID() + ".com");
     }
 
     static private File load(String filename) {
