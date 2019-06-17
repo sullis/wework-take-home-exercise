@@ -19,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class UrlProcessorTest extends AbstractTest {
     @Test
-    public void asiaUrls_maxConcurrentHttpRequests1() throws Exception {
+    public void asiaUrls() throws Exception {
         // You might be wondering 'why does this test exist?'
         // Short Answer:
         // Accessing China websites and Japan websites can be slower
