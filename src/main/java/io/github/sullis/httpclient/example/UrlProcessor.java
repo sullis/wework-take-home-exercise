@@ -55,7 +55,7 @@ public final class UrlProcessor {
             return _httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                     .thenApply(httpResp -> {
                         System.out.println("["
-                                + httpResp.uri()
+                                + url
                                 + "] statusCode="
                                 + httpResp.statusCode());
                         try {
