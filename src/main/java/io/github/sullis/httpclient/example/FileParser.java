@@ -40,8 +40,8 @@ public class FileParser {
 
         @Override
         public Either<IgnoredLine, URL> next() {
-            CSVRecord record = _iter.next();
-            long lineNum = _lineCount.incrementAndGet();
+            final CSVRecord record = _iter.next();
+            final long lineNum = _lineCount.incrementAndGet();
             if (record.size() != EXPECTED_FIELD_COUNT) {
                 return Either.left(IgnoredLine.create(
                         lineNum,
@@ -54,7 +54,7 @@ public class FileParser {
                         true,
                         "File header"));
             }
-            String website = record.get(1).trim();
+            final String website = record.get(1).trim();
             try {
                 return Either.right(new URL("https://" + website));
             } catch (MalformedURLException ex) {
