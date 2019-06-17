@@ -17,6 +17,7 @@ public class TestUtil {
     static public final File oneBadLine = load("one-bad-line.txt");
 
     static public final ImmutableList<URL> URL_LIST = ImmutableList.of(
+            makeUrl("https://people.com.cn/"),
             makeUrl("https://google.com"),
             makeUrl("https://twitter.com"),
             makeUrl("https://microsoft.com"),

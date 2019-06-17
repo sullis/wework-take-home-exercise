@@ -47,14 +47,14 @@ public class UrlProcessorTest extends AbstractTest {
                     responseBodyProcessor);
             CompletableFuture<UrlProcessorResult> future = processor.execute();
             UrlProcessorResult result = future.get();
-            assertEquals(URL_LIST.size(), result.processedCount());
-            assertEquals(0, result.failureCount());
+            assertEquals(7, result.processedCount());
+            assertEquals(1, result.failureCount());
             outputFileWriter.close();
             assertTrue(outputFile.exists());
             assertTrue(listenerWriter.toString().contains("Processing URL: " + URL_LIST.get(0)));
             assertTrue(listenerWriter.toString().contains("Processing URL: " + URL_LIST.get(URL_LIST.size() - 1)));
             ImmutableList<String> outputFileLines = Files.asCharSource(outputFile, CharSetUtil.DEFAULT_CHARSET).readLines();
-            assertEquals(URL_LIST.size(), outputFileLines.size(), "Lines:" + outputFileLines);
+            assertEquals(7, outputFileLines.size(), "Lines:" + outputFileLines);
         } finally {
             outputFile.delete();
         }

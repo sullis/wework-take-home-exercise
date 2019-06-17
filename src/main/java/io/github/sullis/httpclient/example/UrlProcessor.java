@@ -58,7 +58,7 @@ public final class UrlProcessor {
                         failureCount.incrementAndGet();
                     }
                     httpSemaphore.release();
-                    _logger.debug("PERMIT RELEASED [" + url + "]");
+                    _logger.debug("PERMIT RELEASED [" + url + "]. throwable=" + throwable);
                 });
             } catch (Exception ex) {
                 return CompletableFuture.failedFuture(ex);
