@@ -66,7 +66,6 @@ public class Main {
         }
       }
     } catch (ParseException ex) {
-      System.err.println();
       return MainResult.create(ExitCode.ERROR, Optional.of("Command line parse error:  " + ex.getMessage()));
     } catch (Exception ex) {
       return MainResult.create(ExitCode.ERROR, Optional.of(Throwables.getStackTraceAsString(ex)));
