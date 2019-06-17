@@ -1,1 +1,1 @@
-mvn clean package
+mvn clean enforcer:enforce package
