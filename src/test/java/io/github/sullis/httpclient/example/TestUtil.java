@@ -16,6 +16,14 @@ public class TestUtil {
     static public final File blankLines = load("blank-lines.txt");
     static public final File oneBadLine = load("one-bad-line.txt");
 
+    static public final ImmutableList<URL> ASIA_URL_LIST = ImmutableList.of(
+            makeUrl("http://people.com.cn"),
+            makeUrl("http://infoseek.co.jp"),
+            makeUrl("http://japanpost.jp"),
+            makeUrl("http://google.cn"),
+            makeUrl("http://china.com.cn")
+    );
+
     static public final ImmutableList<URL> URL_LIST = ImmutableList.of(
             makeUrl("http://people.com.cn/"),
             makeUrl("http://infoseek.co.jp/"),
