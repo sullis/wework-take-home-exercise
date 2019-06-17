@@ -1,0 +1,15 @@
+<configuration debug="true">
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="io.github.sullis.httpclient.example" level="DEBUG"/>
+  <logger name="jdk.httpclient.HttpClient" level="DEBUG"/>
+
+  <root level="ERROR">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>

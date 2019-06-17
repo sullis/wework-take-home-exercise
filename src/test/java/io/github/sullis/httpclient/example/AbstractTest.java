@@ -14,8 +14,5 @@ public class AbstractTest {
 
         // use "all" to enable verbose output
         props.setProperty("jdk.httpclient.HttpClient.log", "off");
-
-        props.setProperty("org.slf4j.simpleLogger.log.jdk.httpclient.HttpClient", "debug");
-        props.setProperty("org.slf4j.simpleLogger.log.io.github.sullis.httpclient.example.UrlProcessor", "debug");
     }
 }
