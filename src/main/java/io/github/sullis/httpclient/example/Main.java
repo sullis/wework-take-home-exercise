@@ -3,13 +3,10 @@ package io.github.sullis.httpclient.example;
 
 import com.google.common.base.Throwables;
 import io.atlassian.fugue.Either;
-import io.atlassian.fugue.Pair;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.URL;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -19,32 +16,33 @@ public class Main {
   public static void main(String[] args) {
     Main main = new Main();
     try {
-      Pair<ExitCode, Optional<String>> result = main.execute(args);
-      result.right().ifPresent(errMsg -> System.err.println(errMsg));
-      System.exit(result.left().code());
+      MainResult result = main.execute(args);
+      PrintStream printStream = (result.exitCode() == ExitCode.OK) ? System.out : System.err;
+      result.message().ifPresent(msg -> printStream.println(msg));
+      System.exit(result.exitCode().code());
     } catch (Exception ex) {
       ex.printStackTrace();
       System.exit(ExitCode.ERROR.code());
     }
   }
 
-  public Pair<ExitCode, Optional<String>> execute(String[] args) {
+  public MainResult execute(String[] args) {
     try {
       CommandLine cmdLine = CommandLineUtil.build(args);
       final boolean verbose = cmdLine.hasOption("verbose");
       final String inputFilename = cmdLine.getOptionValue("input");
       File f = new File(inputFilename);
       if (!f.exists()) {
-        return Pair.pair(ExitCode.ERROR, Optional.of(f.toString() + " does not exist."));
+        return MainResult.create(ExitCode.ERROR, Optional.of(f.toString() + " does not exist."));
       }
       if (f.isDirectory()) {
-        return Pair.pair(ExitCode.ERROR, Optional.of(f.toString() + " is a directory."));
+        return MainResult.create(ExitCode.ERROR, Optional.of(f.toString() + " is a directory."));
       }
       if (!f.canRead()) {
-        return Pair.pair(ExitCode.ERROR, Optional.of("Unable to read file: " + f.toString()));
+        return MainResult.create(ExitCode.ERROR, Optional.of("Unable to read file: " + f.toString()));
       }
       if (f.length() == 0) {
-        return Pair.pair(ExitCode.ERROR, Optional.of("Empty file: " + f.toString()));
+        return MainResult.create(ExitCode.ERROR, Optional.of("Empty file: " + f.toString()));
       }
       try (FileInputStream input = new FileInputStream(f)) {
         FileParser parser = new FileParser();
@@ -58,13 +56,13 @@ public class Main {
                 outputFileWriter);
         CompletableFuture<UrlProcessorResult> future = p.execute();
         UrlProcessorResult processorResult = future.get();
-        return Pair.pair(ExitCode.OK, Optional.empty());
+        return MainResult.create(ExitCode.OK, Optional.empty());
       }
     } catch (ParseException ex) {
       System.err.println();
-      return Pair.pair(ExitCode.ERROR, Optional.of("Command line parse error:  " + ex.getMessage()));
+      return MainResult.create(ExitCode.ERROR, Optional.of("Command line parse error:  " + ex.getMessage()));
     } catch (Exception ex) {
-      return Pair.pair(ExitCode.ERROR, Optional.of(Throwables.getStackTraceAsString(ex)));
+      return MainResult.create(ExitCode.ERROR, Optional.of(Throwables.getStackTraceAsString(ex)));
     }
   }
 
