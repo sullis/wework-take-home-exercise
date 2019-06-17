@@ -59,7 +59,7 @@ public final class UrlProcessor {
                                 + "] statusCode="
                                 + httpResp.statusCode());
                         try {
-                            writer.writeLine(httpResp.uri() + ",true");
+                            writer.writeLine(httpResp.uri().toURL(), true);
                         } catch (Exception ex) {
                             ex.printStackTrace();
                             // TODO fixme

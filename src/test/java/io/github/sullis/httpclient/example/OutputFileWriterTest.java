@@ -1,30 +1,33 @@
 package io.github.sullis.httpclient.example;
 
 import org.junit.jupiter.api.Test;
+
+import static io.github.sullis.httpclient.example.TestUtil.makeRandomUrl;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.UUID;
 
 public class OutputFileWriterTest extends AbstractTest {
     @Test
     public void writeThenOverwrite() throws Exception {
-        final String aaa = "AAA-" + UUID.randomUUID();
-        final String bbb = "BBB-" + UUID.randomUUID();
-        final String ccc = "CCC-" + UUID.randomUUID();
-        final String ddd = "DDD-" + UUID.randomUUID();
+        final URL aaa = makeRandomUrl();
+        final URL bbb = makeRandomUrl();
+        final URL ccc = makeRandomUrl();
+        final URL ddd = makeRandomUrl();
         final String filename = this.getClass().getSimpleName() + "-" + UUID.randomUUID().toString() + ".txt";
         final File file = new File(filename);
         try {
             assertFalse(file.exists());
-            saveFileAndVerify(filename, aaa, bbb);
+            saveFileAndVerify(filename, true, aaa, bbb);
             assertTrue(file.exists());
 
             // overwrite the file with new content
-            saveFileAndVerify(filename, ccc, ddd);
+            saveFileAndVerify(filename, false, ccc, ddd);
             assertTrue(file.exists());
 
         } finally {
@@ -32,18 +35,19 @@ public class OutputFileWriterTest extends AbstractTest {
         }
     }
 
-    private static void saveFileAndVerify(String filename, String... lines) throws IOException {
+    private static void saveFileAndVerify(String filename, boolean urlSuccess, URL... urls) throws IOException {
         final File file = new File(filename);
         final OutputFileWriter writer = new OutputFileWriter(filename);
-        for (String line : lines) {
-            writer.writeLine(line);
+        for (URL u : urls) {
+            writer.writeLine(u, urlSuccess);
         }
         writer.close();
         assertTrue(file.exists());
         ImmutableList<String> fileContent = Files.asCharSource(file, CharSetUtil.DEFAULT_CHARSET).readLines();
-        assertEquals(lines.length, fileContent.size());
-        for (int i = 0; i < lines.length; i++) {
-            assertEquals(lines[i], fileContent.get(i));
+        assertEquals(urls.length, fileContent.size());
+        for (int i = 0; i < urls.length; i++) {
+            String expected = "\"" + urls[i] + "\"," + urlSuccess;
+            assertEquals(expected, fileContent.get(i));
         }
 
     }

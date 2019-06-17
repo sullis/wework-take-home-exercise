@@ -3,6 +3,7 @@ package io.github.sullis.httpclient.example;
 import java.io.Closeable;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 
 public class OutputFileWriter implements Closeable {
     static public final String DEFAULT_FILENAME = "results.txt";
@@ -13,9 +14,8 @@ public class OutputFileWriter implements Closeable {
       _writer = new FileWriter(filename, CharSetUtil.DEFAULT_CHARSET, false);
     }
 
-    public synchronized void writeLine(String content) throws IOException {
-        _writer.write(content);
-        _writer.write("\n");
+    public synchronized void writeLine(URL u, boolean success) throws IOException {
+        _writer.write("\"" + u + "\"," + success + "\n");
         _writer.flush();
     }
 
