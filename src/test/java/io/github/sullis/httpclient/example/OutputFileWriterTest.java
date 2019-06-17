@@ -1,12 +1,10 @@
 package io.github.sullis.httpclient.example;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.io.CharSource;
-import com.google.common.io.Files;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-
+import com.google.common.collect.ImmutableList;
+import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
