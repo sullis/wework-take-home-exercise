@@ -31,3 +31,6 @@ output/
 .settings/
 
 results.txt
+UrlProcessorTest*.txt
+permit.txt
+permits.txt
