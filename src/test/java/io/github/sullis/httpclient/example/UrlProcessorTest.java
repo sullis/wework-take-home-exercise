@@ -1,6 +1,7 @@
 package io.github.sullis.httpclient.example;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.io.Files;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,6 +17,7 @@ public class UrlProcessorTest extends AbstractTest {
     @Test
     public void happyPath() throws Exception {
         final String outputFilename = this.getClass().getSimpleName() + "-" + UUID.randomUUID().toString() + ".txt";
+        final File outputFile = new File(outputFilename);
         ImmutableList<URL> urls = ImmutableList.of(
                 new URL("https://google.com"),
                 new URL("https://twitter.com"));
@@ -36,9 +38,13 @@ public class UrlProcessorTest extends AbstractTest {
             assertEquals(0, result.failureCount());
             assertEquals("Processing URL: https://google.com\nProcessing URL: https://twitter.com\n",
                     listenerWriter.toString());
+            assertTrue(outputFile.exists());
+            ImmutableList<String> lines = Files.asCharSource(outputFile, CharSetUtil.DEFAULT_CHARSET).readLines();
+            assertEquals(urls.size(), lines.size());
+            assertEquals("\"https://google.com\",true", lines.get(0));
+            assertEquals("\"https://twitter.com\",true", lines.get(1));
         } finally {
-            File f = new File(outputFilename);
-            f.delete();
+            outputFile.delete();
         }
 
     }
