@@ -37,8 +37,8 @@ public class FileParser {
         }
 
         @Override
-        public synchronized Either<IgnoredLine, URL> next() {
-            CSVRecord record = _iter.next();
+        public Either<IgnoredLine, URL> next() {
+            final CSVRecord record = _iter.next();
             final long lineNum = _lineCount.incrementAndGet();
             if (record.size() != EXPECTED_FIELD_COUNT) {
                 return Either.left(IgnoredLine.create(
