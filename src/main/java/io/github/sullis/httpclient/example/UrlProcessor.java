@@ -8,6 +8,7 @@ import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -97,6 +98,7 @@ public final class UrlProcessor {
     protected HttpRequest buildRequest(URL url) throws URISyntaxException {
         return HttpRequest.newBuilder(url.toURI())
                 .GET()
+                .timeout(Duration.ofMillis(10000))
                 .header("User-Agent", HttpClientUtil.USER_AGENT)
                 .header("Accept-Charset", CharSetUtil.DEFAULT_CHARSET.name())
                 .build();
