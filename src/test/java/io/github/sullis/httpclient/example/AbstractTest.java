@@ -12,7 +12,7 @@ public class AbstractTest {
 
         props.setProperty("jdk.internal.httpclient.debug", "false");
 
-        // use "all" to enable verbose output
-        props.setProperty("jdk.httpclient.HttpClient.log", "off");
+        // see: https://stackoverflow.com/questions/53215038/how-to-log-request-response-using-java-net-http-httpclient/53231046#53231046
+        props.setProperty("jdk.httpclient.HttpClient.log", "requests");
     }
 }
