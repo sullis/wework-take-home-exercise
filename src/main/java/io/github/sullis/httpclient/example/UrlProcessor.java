@@ -49,10 +49,13 @@ public final class UrlProcessor {
                 _logger.debug("PERMIT ACQUIRED [" + url + "]");
                 _logger.debug("httpSemaphore: availablePermits="
                         + httpSemaphore.availablePermits());
-                CompletableFuture<HttpResponse<String>> responseFuture = processUrl(url);
+                statusProcessingUrl(url);
+                CompletableFuture<HttpResponse<String>> responseFuture = sendHttpRequest(url);
                 responseFuture.whenCompleteAsync((httpResponse, throwable) -> {
                     if (httpResponse != null) {
                         processedCount.incrementAndGet();
+                        _logger.debug("[" + url + "] statusCode=" + httpResponse.statusCode());
+                        _responseBodyProcessor.processHttpResponse(url, httpResponse.statusCode(), httpResponse.body());
                     }
                     if (throwable != null) {
                         failureCount.incrementAndGet();
@@ -73,18 +76,10 @@ public final class UrlProcessor {
         return CompletableFuture.completedFuture(UrlProcessorResult.create(processedCount.get(), failureCount.get()));
     }
 
-    protected CompletableFuture<HttpResponse<String>> processUrl(URL url) {
-        statusProcessingUrl(url);
+    protected CompletableFuture<HttpResponse<String>> sendHttpRequest(URL url) {
         try {
             HttpRequest request = buildRequest(url);
-            return _httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                    .thenApplyAsync(httpResp -> {
-                        if (_logger.isDebugEnabled()) {
-                            _logger.debug("[" + url + "] statusCode=" + httpResp.statusCode());
-                        }
-                        _responseBodyProcessor.processHttpResponse(url, httpResp.statusCode(), httpResp.body());
-                        return httpResp;
-                    });
+            return _httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
         }
         catch (URISyntaxException ex) {
             return CompletableFuture.failedFuture(ex);
