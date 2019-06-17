@@ -49,7 +49,14 @@ public final class UrlProcessor {
         statusProcessingUrl(url);
         try {
             HttpRequest request = buildRequest(url);
-            return _httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
+            return _httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                    .thenApply(httpResp -> {
+                        System.out.println("["
+                                + httpResp.uri()
+                                + "] statusCode="
+                                + httpResp.statusCode());
+                        return httpResp;
+                    });
         }
         catch (URISyntaxException ex) {
             return CompletableFuture.failedFuture(ex);
