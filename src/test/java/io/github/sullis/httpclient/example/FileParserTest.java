@@ -9,12 +9,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.net.URL;
 import java.util.Iterator;
+import static io.github.sullis.httpclient.example.TestUtil.*;
 
 public class FileParserTest extends AbstractTest {
-    private File twelveUrls = load("twelve-urls.txt");
-    private File noHeader = load("no-header.txt");
-    private File blankLines = load("blank-lines.txt");
-    private File oneBadLine = load("one-bad-line.txt");
 
     @Test
     public void fileWithTwelveUrls() throws Exception {
@@ -81,10 +78,4 @@ public class FileParserTest extends AbstractTest {
         assertEquals(12, urlListBuilder.build().size());
     }
 
-    static private File load(String filename) {
-        File f = new File("./src/test/resources/" + filename);
-        assertTrue(f.exists());
-        assertFalse(f.isDirectory());
-        return f;
-    }
 }

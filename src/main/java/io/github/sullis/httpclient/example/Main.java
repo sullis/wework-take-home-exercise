@@ -1,7 +1,9 @@
 
 package io.github.sullis.httpclient.example;
 
+import com.google.common.base.Throwables;
 import io.atlassian.fugue.Either;
+import io.atlassian.fugue.Pair;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 
@@ -14,29 +16,35 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 public class Main {
-
   public static void main(String[] args) {
+    Main main = new Main();
+    try {
+      Pair<ExitCode, Optional<String>> result = main.execute(args);
+      result.right().ifPresent(errMsg -> System.err.println(errMsg));
+      System.exit(result.left().code());
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      System.exit(ExitCode.ERROR.code());
+    }
+  }
 
+  public Pair<ExitCode, Optional<String>> execute(String[] args) {
     try {
       CommandLine cmdLine = CommandLineUtil.build(args);
-      System.out.println("args: " + cmdLine.getArgList());
       final boolean verbose = cmdLine.hasOption("verbose");
-      File f = new File("input.txt"); // FIXME
+      final String inputFilename = cmdLine.getOptionValue("input");
+      File f = new File(inputFilename);
       if (!f.exists()) {
-        System.err.println(f.toString() + " does not exist.");
-        System.exit(1);
+        return Pair.pair(ExitCode.ERROR, Optional.of(f.toString() + " does not exist."));
       }
       if (f.isDirectory()) {
-        System.err.println(f.toString() + " is a directory.");
-        System.exit(1);
+        return Pair.pair(ExitCode.ERROR, Optional.of(f.toString() + " is a directory."));
       }
       if (!f.canRead()) {
-        System.err.println("Unable to read file: " + f.toString());
-        System.exit(1);
+        return Pair.pair(ExitCode.ERROR, Optional.of("Unable to read file: " + f.toString()));
       }
       if (f.length() == 0) {
-        System.err.println("Empty file: " + f.toString());
-        System.exit(1);
+        return Pair.pair(ExitCode.ERROR, Optional.of("Empty file: " + f.toString()));
       }
       try (FileInputStream input = new FileInputStream(f)) {
         FileParser parser = new FileParser();
@@ -48,14 +56,13 @@ public class Main {
                 20);
         CompletableFuture<UrlProcessorResult> future = p.execute();
         UrlProcessorResult processorResult = future.get();
-        System.exit(0);
+        return Pair.pair(ExitCode.OK, Optional.empty());
       }
     } catch (ParseException ex) {
-      System.err.println("Command line error:  " + ex.getMessage());
-      System.exit(1);
+      System.err.println();
+      return Pair.pair(ExitCode.ERROR, Optional.of("Command line parse error:  " + ex.getMessage()));
     } catch (Exception ex) {
-      ex.printStackTrace();
-      System.exit(1);
+      return Pair.pair(ExitCode.ERROR, Optional.of(Throwables.getStackTraceAsString(ex)));
     }
   }
 

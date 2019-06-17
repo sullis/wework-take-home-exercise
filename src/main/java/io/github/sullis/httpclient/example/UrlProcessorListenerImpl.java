@@ -13,9 +13,10 @@ public class UrlProcessorListenerImpl
     }
 
     @Override
-    public void statusProcessingUrl(URL url) {
+    public synchronized void statusProcessingUrl(URL url) {
         try {
             _writer.write("Processing URL: " + url + "\n");
+            _writer.flush();
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
