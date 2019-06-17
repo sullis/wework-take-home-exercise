@@ -12,6 +12,7 @@ public class HttpClientUtil {
         return HttpClient.newBuilder()
                 .connectTimeout(Duration.ofMillis(2000))
                 .followRedirects(HttpClient.Redirect.NORMAL)
+                .version(HttpClient.Version.HTTP_1_1)
                 .build();
     }
 }
