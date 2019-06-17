@@ -17,18 +17,18 @@ public final class UrlProcessor {
     private final Optional<UrlProcessorListener> _listener;
     private final int _maxConcurrency;
     private final Stream<URL> _urls;
-    private final OutputFileWriter _outputFileWriter;
+    private final ResponseBodyProcessor _responseBodyProcessor;
 
     public UrlProcessor(HttpClient client,
                         Optional<UrlProcessorListener> listener,
                         Stream<URL> urls,
                         int maxConcurrency,
-                        OutputFileWriter outputFileWriter) {
+                        ResponseBodyProcessor responseBodyProcessor) {
         this._httpClient = client;
         this._listener = listener;
         this._maxConcurrency = maxConcurrency;
         this._urls = urls;
-        this._outputFileWriter = outputFileWriter;
+        this._responseBodyProcessor = responseBodyProcessor;
     }
 
     public CompletableFuture<UrlProcessorResult> execute() throws Exception {
@@ -37,7 +37,7 @@ public final class UrlProcessor {
         AtomicLong failureCount = new AtomicLong(0);
         while(iter.hasNext()) {
             URL url = iter.next();
-            CompletableFuture<HttpResponse<String>> responseFuture = processUrl(url, _outputFileWriter);
+            CompletableFuture<HttpResponse<String>> responseFuture = processUrl(url);
             try {
                 responseFuture.get(10, TimeUnit.SECONDS);
                 successCount.incrementAndGet();
@@ -48,22 +48,13 @@ public final class UrlProcessor {
         return CompletableFuture.completedFuture(UrlProcessorResult.create(successCount.get(), failureCount.get()));
     }
 
-    protected CompletableFuture<HttpResponse<String>> processUrl(URL url, OutputFileWriter writer) {
+    protected CompletableFuture<HttpResponse<String>> processUrl(URL url) {
         statusProcessingUrl(url);
         try {
             HttpRequest request = buildRequest(url);
             return _httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                     .thenApply(httpResp -> {
-                        System.out.println("["
-                                + url
-                                + "] statusCode="
-                                + httpResp.statusCode());
-                        try {
-                            writer.writeLine(url, true);
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                            // TODO fixme
-                        }
+                        _responseBodyProcessor.processHttpResponse(url, httpResp.statusCode(), httpResp.body());
                         return httpResp;
                     });
         }

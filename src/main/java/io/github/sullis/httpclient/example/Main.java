@@ -53,7 +53,7 @@ public class Main {
                 getListener(verbose),
                 urlStream,
                 20,
-                outputFileWriter);
+                new ResponseBodyProcessorImpl(outputFileWriter));
         CompletableFuture<UrlProcessorResult> future = p.execute();
         UrlProcessorResult processorResult = future.get();
         return MainResult.create(ExitCode.OK, Optional.empty());

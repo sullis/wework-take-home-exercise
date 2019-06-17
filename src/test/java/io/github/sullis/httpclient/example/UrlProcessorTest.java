@@ -24,11 +24,12 @@ public class UrlProcessorTest extends AbstractTest {
             OutputFileWriter outputFileWriter = new OutputFileWriter(outputFilename);
             StringWriter listenerWriter = new StringWriter();
             UrlProcessorListener listener = new UrlProcessorListenerImpl(listenerWriter);
+            ResponseBodyProcessor responseBodyProcessor = new ResponseBodyProcessorImpl(outputFileWriter);
             UrlProcessor processor = new UrlProcessor(client,
                     Optional.of(listener),
                     urls.stream(),
                     20,
-                    outputFileWriter);
+                    responseBodyProcessor);
             CompletableFuture<UrlProcessorResult> future = processor.execute();
             UrlProcessorResult result = future.get();
             assertEquals(2, result.successCount());
