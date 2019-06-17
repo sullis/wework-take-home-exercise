@@ -23,7 +23,7 @@ public class TestUtil {
             makeUrl("https://www.cdc.gov"),
             makeUrl("https://npr.org"),
             makeUrl("https://craigslist.org"),
-            makeUrl("https://nytimes.com")
+            makeUrl("https://paypal.com")
     );
 
     static public URL makeUrl(String s) {

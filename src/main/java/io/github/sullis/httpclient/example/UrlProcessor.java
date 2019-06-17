@@ -1,5 +1,8 @@
 package io.github.sullis.httpclient.example;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.http.HttpClient;
@@ -9,10 +12,11 @@ import java.util.Iterator;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
 public final class UrlProcessor {
+    private final Logger _logger = LoggerFactory.getLogger(UrlProcessor.class);
     private final HttpClient _httpClient;
     private final Optional<UrlProcessorListener> _listener;
     private final int _maxConcurrentHttpRequests;
@@ -34,22 +38,32 @@ public final class UrlProcessor {
     public CompletableFuture<UrlProcessorResult> execute() {
         Semaphore httpSemaphore = new Semaphore(_maxConcurrentHttpRequests);
         Iterator<URL> iter = _urls.iterator();
-        long processedCount = 0;
-        long failureCount = 0;
+        final AtomicLong processedCount = new AtomicLong(0);
+        final AtomicLong failureCount = new AtomicLong(0);
         while (iter.hasNext()) {
             try {
-                httpSemaphore.acquireUninterruptibly();
                 URL url = iter.next();
+                httpSemaphore.acquireUninterruptibly();
+                if (_logger.isDebugEnabled()) {
+                    _logger.debug("httpSemaphore: availablePermits="
+                            + httpSemaphore.availablePermits());
+                }
                 CompletableFuture<HttpResponse<String>> responseFuture = processUrl(url);
-                responseFuture.get(10, TimeUnit.SECONDS);
-                processedCount++;
+                responseFuture.whenCompleteAsync( (httpResponse, throwable) -> {
+                    httpSemaphore.release();
+                    if (httpResponse != null) {
+                        processedCount.incrementAndGet();
+                    }
+                    if (throwable != null) {
+                        failureCount.incrementAndGet();
+                    }
+                });
             } catch (Exception ex) {
-                failureCount++;
-            } finally {
-                httpSemaphore.release();
+                return CompletableFuture.failedFuture(ex);
             }
         }
-        return CompletableFuture.completedFuture(UrlProcessorResult.create(processedCount, failureCount));
+        httpSemaphore.acquireUninterruptibly(_maxConcurrentHttpRequests);
+        return CompletableFuture.completedFuture(UrlProcessorResult.create(processedCount.get(), failureCount.get()));
     }
 
     protected CompletableFuture<HttpResponse<String>> processUrl(URL url) {
@@ -57,7 +71,10 @@ public final class UrlProcessor {
         try {
             HttpRequest request = buildRequest(url);
             return _httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                    .thenApply(httpResp -> {
+                    .thenApplyAsync(httpResp -> {
+                        if (_logger.isDebugEnabled()) {
+                            _logger.debug("[" + url + "] statusCode=" + httpResp.statusCode());
+                        }
                         _responseBodyProcessor.processHttpResponse(url, httpResp.statusCode(), httpResp.body());
                         return httpResp;
                     });
