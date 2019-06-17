@@ -48,12 +48,14 @@ public class Main {
       }
       try (FileInputStream input = new FileInputStream(f)) {
         FileParser parser = new FileParser();
+        OutputFileWriter outputFileWriter = new OutputFileWriter();
         Stream<Either<IgnoredLine, URL>> stream = parser.parse(input, CharSetUtil.DEFAULT_CHARSET);
         Stream<URL> urlStream = stream.filter(item -> item.isRight()).map(item -> item.right().get());
         UrlProcessor p = new UrlProcessor(HttpClientUtil.build(),
                 getListener(verbose),
                 urlStream,
-                20);
+                20,
+                outputFileWriter);
         CompletableFuture<UrlProcessorResult> future = p.execute();
         UrlProcessorResult processorResult = future.get();
         return Pair.pair(ExitCode.OK, Optional.empty());

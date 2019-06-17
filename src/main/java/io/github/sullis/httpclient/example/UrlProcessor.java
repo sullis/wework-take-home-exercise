@@ -17,15 +17,18 @@ public final class UrlProcessor {
     private final Optional<UrlProcessorListener> _listener;
     private final int _maxConcurrency;
     private final Stream<URL> _urls;
+    private final OutputFileWriter _outputFileWriter;
 
     public UrlProcessor(HttpClient client,
                         Optional<UrlProcessorListener> listener,
                         Stream<URL> urls,
-                        int maxConcurrency) {
+                        int maxConcurrency,
+                        OutputFileWriter outputFileWriter) {
         this._httpClient = client;
         this._listener = listener;
         this._maxConcurrency = maxConcurrency;
         this._urls = urls;
+        this._outputFileWriter = outputFileWriter;
     }
 
     public CompletableFuture<UrlProcessorResult> execute() throws Exception {
@@ -34,7 +37,7 @@ public final class UrlProcessor {
         AtomicLong failureCount = new AtomicLong(0);
         while(iter.hasNext()) {
             URL url = iter.next();
-            CompletableFuture<HttpResponse<String>> responseFuture = processUrl(url);
+            CompletableFuture<HttpResponse<String>> responseFuture = processUrl(url, _outputFileWriter);
             try {
                 responseFuture.get(10, TimeUnit.SECONDS);
                 successCount.incrementAndGet();
@@ -45,7 +48,7 @@ public final class UrlProcessor {
         return CompletableFuture.completedFuture(UrlProcessorResult.create(successCount.get(), failureCount.get()));
     }
 
-    protected CompletableFuture<HttpResponse<String>> processUrl(URL url) {
+    protected CompletableFuture<HttpResponse<String>> processUrl(URL url, OutputFileWriter writer) {
         statusProcessingUrl(url);
         try {
             HttpRequest request = buildRequest(url);
@@ -55,6 +58,12 @@ public final class UrlProcessor {
                                 + httpResp.uri()
                                 + "] statusCode="
                                 + httpResp.statusCode());
+                        try {
+                            writer.writeLine(httpResp.uri() + ",true");
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            // TODO fixme
+                        }
                         return httpResp;
                     });
         }
