@@ -10,7 +10,10 @@ import java.io.*;
 import java.net.URL;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
+
+import static io.github.sullis.httpclient.example.RegexUtil.DEFAULT_PATTERN;
 
 public class Main {
   public static void main(String[] args) {
@@ -49,11 +52,12 @@ public class Main {
         OutputFileWriter outputFileWriter = new OutputFileWriter(OutputFileWriter.DEFAULT_FILENAME);
         Stream<Either<IgnoredLine, URL>> stream = parser.parse(input, CharSetUtil.DEFAULT_CHARSET);
         Stream<URL> urlStream = stream.filter(item -> item.isRight()).map(item -> item.right().get());
+        Pattern regexPattern = Pattern.compile("google");
         UrlProcessor p = new UrlProcessor(HttpClientUtil.build(),
                 getListener(verbose),
                 urlStream,
                 20,
-                new ResponseBodyProcessorImpl(outputFileWriter));
+                new ResponseBodyProcessorImpl(outputFileWriter, DEFAULT_PATTERN));
         CompletableFuture<UrlProcessorResult> future = p.execute();
         UrlProcessorResult processorResult = future.get();
         return MainResult.create(ExitCode.OK, Optional.empty());

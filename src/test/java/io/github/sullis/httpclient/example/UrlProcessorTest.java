@@ -3,6 +3,8 @@ package io.github.sullis.httpclient.example;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 import org.junit.jupiter.api.Test;
+
+import static io.github.sullis.httpclient.example.RegexUtil.DEFAULT_PATTERN;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
@@ -26,7 +28,7 @@ public class UrlProcessorTest extends AbstractTest {
             OutputFileWriter outputFileWriter = new OutputFileWriter(outputFilename);
             StringWriter listenerWriter = new StringWriter();
             UrlProcessorListener listener = new UrlProcessorListenerImpl(listenerWriter);
-            ResponseBodyProcessor responseBodyProcessor = new ResponseBodyProcessorImpl(outputFileWriter);
+            ResponseBodyProcessor responseBodyProcessor = new ResponseBodyProcessorImpl(outputFileWriter, DEFAULT_PATTERN);
             UrlProcessor processor = new UrlProcessor(client,
                     Optional.of(listener),
                     urls.stream(),
