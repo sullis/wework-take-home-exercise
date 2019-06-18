@@ -26,6 +26,12 @@ This project uses the Java platform HttpClient:
 
 This HttpClient is available in Java 11 and above.  (It is not available in Java 8)
 
+# Core classes
+- [Main.java](https://github.com/sullis/java-httpclient-example/blob/master/src/main/java/io/github/sullis/httpclient/example/Main.java)
+- [FileParser.java](https://github.com/sullis/java-httpclient-example/blob/master/src/main/java/io/github/sullis/httpclient/example/FileParser.java)
+- [UrlProcessor.java](https://github.com/sullis/java-httpclient-example/blob/master/src/main/java/io/github/sullis/httpclient/example/UrlProcessor.java)
+- [OutputFileWriter.java](https://github.com/sullis/java-httpclient-example/blob/master/src/main/java/io/github/sullis/httpclient/example/OutputFileWriter.java)
+
 # Specification
 
 - [Searcher](https://s3.amazonaws.com/fieldlens-public/Website+Searcher.html)
