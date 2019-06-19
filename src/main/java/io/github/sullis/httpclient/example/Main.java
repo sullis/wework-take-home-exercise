@@ -46,9 +46,9 @@ public class Main {
       if (f.length() == 0) {
         return MainResult.create(ExitCode.ERROR, Optional.of("Empty file: " + f.toString()));
       }
-      try (FileInputStream input = new FileInputStream(f)) {
+      try (FileInputStream input = new FileInputStream(f);
+           OutputFileWriter outputFileWriter = new OutputFileWriter(OutputFileWriter.DEFAULT_FILENAME)) {
         FileParser parser = new FileParser();
-        OutputFileWriter outputFileWriter = new OutputFileWriter(OutputFileWriter.DEFAULT_FILENAME);
         Stream<Either<IgnoredLine, URL>> stream = parser.parse(input, CharSetUtil.DEFAULT_CHARSET);
         Stream<URL> urlStream = stream.filter(item -> item.isRight()).map(item -> item.right().get());
         UrlProcessor p = new UrlProcessor(HttpClientUtil.build(),
