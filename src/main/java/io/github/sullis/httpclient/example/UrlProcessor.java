@@ -44,11 +44,9 @@ public final class UrlProcessor {
         while (iter.hasNext()) {
             try {
                 final URL url = iter.next();
-                _logger.debug("PERMIT NEEDED [" + url + "]");
+                _logger.debug("PERMIT NEEDED [" + url + "], availablePermits=" + httpSemaphore.availablePermits());
                 httpSemaphore.acquireUninterruptibly();
-                _logger.debug("PERMIT ACQUIRED [" + url + "]");
-                _logger.debug("httpSemaphore: availablePermits="
-                        + httpSemaphore.availablePermits());
+                _logger.debug("PERMIT ACQUIRED [" + url + "], availablePermits=" + httpSemaphore.availablePermits());
                 statusProcessingUrl(url);
                 CompletableFuture<HttpResponse<String>> responseFuture = sendHttpRequest(url);
                 responseFuture.whenCompleteAsync((httpResponse, throwable) -> {
