@@ -52,16 +52,19 @@ public final class UrlProcessor {
                 statusProcessingUrl(url);
                 CompletableFuture<HttpResponse<String>> responseFuture = sendHttpRequest(url);
                 responseFuture.whenCompleteAsync((httpResponse, throwable) -> {
-                    if (httpResponse != null) {
-                        processedCount.incrementAndGet();
-                        _logger.debug("[" + url + "] statusCode=" + httpResponse.statusCode());
-                        _responseBodyProcessor.processHttpResponse(url, httpResponse.statusCode(), httpResponse.body());
+                    try {
+                        if (httpResponse != null) {
+                            processedCount.incrementAndGet();
+                            _logger.debug("[" + url + "] statusCode=" + httpResponse.statusCode());
+                            _responseBodyProcessor.processHttpResponse(url, httpResponse.statusCode(), httpResponse.body());
+                        }
+                        if (throwable != null) {
+                            failureCount.incrementAndGet();
+                        }
+                    } finally {
+                        httpSemaphore.release();
+                        _logger.debug("PERMIT RELEASED [" + url + "]. throwable=" + throwable);
                     }
-                    if (throwable != null) {
-                        failureCount.incrementAndGet();
-                    }
-                    httpSemaphore.release();
-                    _logger.debug("PERMIT RELEASED [" + url + "]. throwable=" + throwable);
                 });
             } catch (Exception ex) {
                 return CompletableFuture.failedFuture(ex);
