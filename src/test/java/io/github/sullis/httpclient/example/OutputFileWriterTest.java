@@ -37,11 +37,11 @@ public class OutputFileWriterTest extends AbstractTest {
 
     private static void saveFileAndVerify(String filename, URL... urls) throws IOException {
         final File file = new File(filename);
-        final OutputFileWriter writer = new OutputFileWriter(filename);
-        for (URL u : urls) {
-            writer.writeLine(u);
+        try (OutputFileWriter writer = new OutputFileWriter(filename)) {
+            for (URL u : urls) {
+                writer.writeLine(u);
+            }
         }
-        writer.close();
         assertTrue(file.exists());
         ImmutableList<String> fileContent = Files.asCharSource(file, CharSetUtil.DEFAULT_CHARSET).readLines();
         assertEquals(urls.length, fileContent.size());
