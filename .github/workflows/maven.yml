@@ -1,13 +1,11 @@
 name: Java CI
-
 on: [push]
-
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ '11.0.x' ]
+        java: [ '11.0.x', '13.0.x' ]
     steps:
     - uses: actions/checkout@v1
     - name: Set up JDK
