@@ -47,3 +47,7 @@ This HttpClient is available in Java 11 and above.  (It is not available in Java
 - [slf4j](https://www.slf4j.org/)
 - [logback](https://logback.qos.ch/)
 - [JUnit 5.x](https://junit.org/junit5/)
+
+# Continuous integration
+
+This project uses GitHub Actions workflow.
