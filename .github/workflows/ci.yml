@@ -22,5 +22,5 @@ jobs:
         java-version: ${{ matrix.java }}
     - name: print Java version
       run: java -version
-    - name: Build with Maven
+    - name: Build
       run: mvn -B clean package --file pom.xml
