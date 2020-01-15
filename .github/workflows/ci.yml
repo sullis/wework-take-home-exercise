@@ -10,10 +10,11 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         java: [ '11', '13' ]
+        os: [ 'unbuntu-latest', 'windows-latest', 'macos-latest']
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK
