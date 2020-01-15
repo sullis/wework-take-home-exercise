@@ -5,7 +5,7 @@
 
 This project requires:
 - Java 11.x
-- Maven 3.6.2
+- Maven 3.6.3
 
 # Java 11 development kit
 
