@@ -38,7 +38,7 @@ jobs:
     needs: [build]
     if: github.base_ref == 'master' && github.actor == 'dependabot[bot]'
     steps:
-    - print GitHub Actor
+    - name: print GitHub Actor
       env:
         GITHUB_ACTOR: ${{ github.actor }}
       run: echo "$GITHUB_ACTOR"
