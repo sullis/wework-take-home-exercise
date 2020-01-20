@@ -29,6 +29,10 @@ jobs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-
+    - name: print GitHub Actor
+      env:
+        GITHUB_ACTOR: ${{ github.actor }}
+      run: echo "$GITHUB_ACTOR"
     - name: Build
       run: mvn -B clean package --file pom.xml
 
@@ -38,10 +42,6 @@ jobs:
     needs: [build]
     if: github.base_ref == 'master' && github.actor == 'dependabot[bot]'
     steps:
-    - name: print GitHub Actor
-      env:
-        GITHUB_ACTOR: ${{ github.actor }}
-      run: echo "$GITHUB_ACTOR"
     - name: merge
       uses: actions/github-script@0.4.0
       with:
