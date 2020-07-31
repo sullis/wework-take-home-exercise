@@ -34,7 +34,7 @@ jobs:
         GITHUB_ACTOR: ${{ github.actor }}
       run: echo "$GITHUB_ACTOR"
     - name: Build
-      run: mvn -B clean package --file pom.xml
+      run: mvn --no-transfer-progress -B clean package --file pom.xml
 
   automerge:
     runs-on: [ubuntu-latest]
