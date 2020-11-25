@@ -50,4 +50,4 @@ This HttpClient is available in Java 11 and above.
 
 # Continuous integration
 
-This project uses GitHub Actions workflow.
+This project uses [GitHub Actions](https://github.com/sullis/java-httpclient-example/actions)
