@@ -36,21 +36,3 @@ jobs:
       run: echo "$GITHUB_ACTOR"
     - name: Build
       run: mvn --no-transfer-progress -B clean package
-
-  automerge:
-    runs-on: [ubuntu-latest]
-    name: automerge
-    needs: [build]
-    if: github.base_ref == 'main' && github.actor == 'dependabot[bot]'
-    steps:
-    - name: merge
-      uses: actions/github-script@v4.0.2
-      with:
-        script: |
-          github.pulls.merge({
-            owner: context.payload.repository.owner.login,
-            repo: context.payload.repository.name,
-            pull_number: context.payload.pull_request.number,
-            merge_method: 'squash'
-          })
-        github-token: ${{secrets.GITHUB_TOKEN}}
