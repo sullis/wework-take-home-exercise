@@ -20,10 +20,10 @@ This project requires:
 ```
 
 # Core classes
-- [Main.java](https://github.com/sullis/java-httpclient-example/blob/master/src/main/java/io/github/sullis/httpclient/example/Main.java)
-- [FileParser.java](https://github.com/sullis/java-httpclient-example/blob/master/src/main/java/io/github/sullis/httpclient/example/FileParser.java)
-- [UrlProcessor.java](https://github.com/sullis/java-httpclient-example/blob/master/src/main/java/io/github/sullis/httpclient/example/UrlProcessor.java)
-- [OutputFileWriter.java](https://github.com/sullis/java-httpclient-example/blob/master/src/main/java/io/github/sullis/httpclient/example/OutputFileWriter.java)
+- [Main.java](https://github.com/sullis/java-httpclient-example/blob/main/src/main/java/io/github/sullis/httpclient/example/Main.java)
+- [FileParser.java](https://github.com/sullis/java-httpclient-example/blob/main/src/main/java/io/github/sullis/httpclient/example/FileParser.java)
+- [UrlProcessor.java](https://github.com/sullis/java-httpclient-example/blob/main/src/main/java/io/github/sullis/httpclient/example/UrlProcessor.java)
+- [OutputFileWriter.java](https://github.com/sullis/java-httpclient-example/blob/main/src/main/java/io/github/sullis/httpclient/example/OutputFileWriter.java)
 
 # Specification
 
