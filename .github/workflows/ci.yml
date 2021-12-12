@@ -14,6 +14,7 @@ jobs:
       matrix:
         java: [ '11',  '17' ]
         os: [ 'ubuntu-latest', 'windows-latest', 'macos-latest']
+        distribution: ['zulu']
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
@@ -21,7 +22,7 @@ jobs:
       uses: actions/setup-java@v2
       with:
         java-version: ${{ matrix.java }}
-        distribution: 'zulu'
+        distribution: ${{ matrix.distribution }}
         cache: 'maven'
     - name: print Java version
       run: java -version
