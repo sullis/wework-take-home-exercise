@@ -24,11 +24,5 @@ jobs:
         java-version: ${{ matrix.java }}
         distribution: ${{ matrix.distribution }}
         cache: 'maven'
-    - name: print Java version
-      run: java -version
-    - name: print GitHub Actor
-      env:
-        GITHUB_ACTOR: ${{ github.actor }}
-      run: echo "$GITHUB_ACTOR"
     - name: Build
       run: mvn --no-transfer-progress -B clean package
