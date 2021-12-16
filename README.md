@@ -4,7 +4,7 @@
 # System requirements
 
 This project requires:
-- Java 11.x
+- JDK 11 or higher
 - Maven 3.6.3
 
 # Java 11 development kit
