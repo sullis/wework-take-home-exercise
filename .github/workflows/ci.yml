@@ -14,7 +14,6 @@ jobs:
       matrix:
         java: [ '11',  '17' ]
         os: [ 'ubuntu-latest', 'windows-latest', 'macos-latest']
-        distribution: ['zulu']
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
@@ -22,7 +21,7 @@ jobs:
       uses: actions/setup-java@main
       with:
         java-version: ${{ matrix.java }}
-        distribution: ${{ matrix.distribution }}
+        distribution: 'zulu'
         cache: 'maven'
     - name: Build
       run: mvn --no-transfer-progress -B clean package
