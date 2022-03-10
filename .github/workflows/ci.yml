@@ -12,7 +12,7 @@ jobs:
   build:
     strategy:
       matrix:
-        java: [ '11',  '17' ]
+        java: [ '17' ]
         os: [ 'ubuntu-latest' ]
         jdk: [ 'zulu', 'microsoft', 'temurin' ]
     runs-on: ${{ matrix.os }}
