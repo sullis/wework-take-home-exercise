@@ -25,4 +25,4 @@ jobs:
         distribution: ${{ matrix.jdk }}
         cache: 'maven'
     - name: Build
-      run: mvn --no-snapshot-updates --no-transfer-progress -B clean verify package
+      run: mvn --no-snapshot-updates --no-transfer-progress -B clean verify
