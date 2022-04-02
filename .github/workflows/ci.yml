@@ -14,7 +14,7 @@ jobs:
       matrix:
         java: [ '18' ]
         os: [ 'ubuntu-latest' ]
-        jdk: [ 'zulu', 'microsoft', 'temurin' ]
+        jdk: [ 'zulu' ]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
