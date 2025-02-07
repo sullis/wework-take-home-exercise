@@ -43,7 +43,7 @@
     <dependency>
       <groupId>io.atlassian.fugue</groupId>
       <artifactId>fugue</artifactId>
-      <version>6.1.1</version>
+      <version>6.1.2</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
