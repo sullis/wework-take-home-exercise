@@ -19,7 +19,7 @@
   <properties>
     <junit.version>6.0.2</junit.version>
     <autovalue.version>1.11.1</autovalue.version>
-    <logback.version>1.5.26</logback.version>
+    <logback.version>1.5.27</logback.version>
     <slf4j.version>2.0.17</slf4j.version>
     <skip.tests>false</skip.tests>
   </properties>
